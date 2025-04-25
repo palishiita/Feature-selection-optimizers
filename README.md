@@ -1,14 +1,78 @@
 # Feature-Selection-Optimizers
-## Investigating optimization algorithms for efficient feature selection in machine learning models. This project focuses on comparing nature-inspired metaheuristic algorithms—specifically those that mimic the social behaviors of animals versus those that simulate human intelligence and learning processes.
 
-Selected Optimizers:
-- Grey Wolf Optimizer (GWO) – inspired by the leadership and hunting behavior of grey wolves.
-- Teaching-Learning-Based Optimization (TLBO) – inspired by the educational interaction between teachers and learners.
+## Overview
+This project investigates optimization algorithms for efficient feature selection in machine learning models. Specifically, it compares nature-inspired metaheuristic algorithms—focusing on those that mimic the social behaviors of animals versus those that simulate human intelligence and learning processes.
 
-Benchmark classification datasets:
-- Low dimention: Breast Cancer Wisconsin (features = 30, classes = 2)
-  - dataset: https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic
-- Medium Dimention: Arrhythmia (features = 279, classes = 16)
-  - dataset: https://archive.ics.uci.edu/dataset/5/arrhythmia
-- High Dimention: Leukemia (features = 7129, classes = 2)
-  - dataset: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476
+The goal is to evaluate and compare the performance of two distinct algorithms in selecting the most relevant features to improve classification accuracy and reduce model complexity.
+
+---
+
+## Why Feature Selection is Important in Machine Learning
+
+Feature selection is a crucial step in the machine learning pipeline that involves identifying the most relevant features (variables) in a dataset. Selecting the right subset of features can lead to several key benefits:
+
+### 1. Improves Model Accuracy
+Irrelevant or redundant features can negatively affect model performance. By removing noise and focusing only on the most informative inputs, feature selection can significantly boost predictive accuracy.
+
+### 2. Reduces Overfitting
+When too many features are used—especially on small datasets—the model can overfit, meaning it performs well on training data but poorly on unseen data. Feature selection helps improve generalization.
+
+### 3. Decreases Computational Cost
+Fewer features mean less data to process, which leads to faster model training and inference. This is especially valuable in real-time systems or large-scale applications.
+
+### 4. Enhances Model Interpretability
+Simpler models with fewer features are easier to understand and interpret—especially critical in sensitive domains like healthcare, finance, or legal systems.
+
+### 5. Improves Data Quality
+Feature selection can expose irrelevant, noisy, or highly correlated features, helping improve the quality of the dataset itself.
+
+### 6. Essential in High-Dimensional Data
+In fields like genomics, text mining, or image processing, the number of features can be in the thousands. Feature selection becomes necessary to prevent the “curse of dimensionality.”
+
+---
+
+## Selected Optimizers
+
+### Grey Wolf Optimizer (GWO)
+- Inspired by the leadership and hunting behavior of grey wolves.
+- Models a hierarchical decision-making structure with alpha, beta, and delta wolves guiding the search.
+
+### Teaching-Learning-Based Optimization (TLBO)
+- Inspired by the educational dynamics between teachers and students in a classroom.
+- Operates in two phases: the Teacher Phase (global search) and Learner Phase (local improvement).
+
+---
+
+## Benchmark Classification Datasets
+
+The following datasets are chosen to represent a range of dimensional complexities:
+
+### Low Dimension
+- Dataset: Breast Cancer Wisconsin  
+- Features: 30  
+- Classes: 2  
+- [View Dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
+
+### Medium Dimension
+- Dataset: Arrhythmia  
+- Features: 279  
+- Classes: 16  
+- [View Dataset](https://archive.ics.uci.edu/dataset/5/arrhythmia)
+
+### High Dimension
+- Dataset: Leukemia (Gene Expression)  
+- Features: 7129  
+- Classes: 2  
+- [View Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476)
+
+---
+
+## Goals
+- Evaluate the effectiveness of GWO and TLBO for feature selection across different dataset complexities.
+- Compare based on:
+  - Classification accuracy
+  - Number of selected features
+  - Computational efficiency
+  - Stability across folds
+
+---
