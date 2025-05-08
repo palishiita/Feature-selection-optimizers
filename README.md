@@ -5,6 +5,8 @@ This project investigates optimization algorithms for efficient feature selectio
 
 The goal is to evaluate and compare the performance of two distinct algorithms in selecting the most relevant features to improve classification accuracy and reduce model complexity.
 
+So, the problem statement is: "How can we search the space of possible feature subsets to minimize classification error and reduce feature count?"
+
 ---
 
 ## Why Feature Selection is Important in Machine Learning
