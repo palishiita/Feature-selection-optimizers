@@ -59,19 +59,14 @@ Selecting fewer features → may reduce accuracy
 
 We need to balance these goals → combine them into one fitness function.
 
-The fitness function balances two objectives: minimizing classification error and minimizing the number of selected features. It is defined as:
-\[
-Fitness = \alpha \times ErrorRate + \beta \times \frac{Number \; of \; Selected \; Features}{Total \; Features}
-\]
-
+It is defined as:
+`Fitness = α × ErrorRate + β × (Number of Selected Features / Total Features)`
 where:
-- \(\alpha\): weight assigned to classification error (e.g., 0.9)
-- \(\beta\): weight assigned to feature count penalty (e.g., 0.1)
-- \(ErrorRate\): classification error on validation data
-- \(Number \; of \; Selected \; Features\): count of selected features (1s in the binary vector)
-- \(Total \; Features\): total number of features in the dataset
-
-The goal is to **minimize** the fitness function
+- `α`: weight assigned to classification error (e.g., 0.9)
+- `β`: weight assigned to feature count penalty (e.g., 0.1)
+- `ErrorRate`: classification error on validation data
+- `Number of Selected Features`: count of selected features (1s in the binary vector)
+- `Total Features`: total number of features in the dataset
 
 ---
 
