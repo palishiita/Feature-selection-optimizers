@@ -43,6 +43,8 @@ In fields like genomics, text mining, or image processing, the number of feature
 - Inspired by the educational dynamics between teachers and students in a classroom.
 - Operates in two phases: the Teacher Phase (global search) and Learner Phase (local improvement).
 
+We need binary versions of GWO and TLBO because feature selection is a discrete 0/1 problem, and binary adaptations allow the algorithms to explore the binary search space effectively by updating bit selections rather than continuous values.
+
 ---
 
 ## Benchmark Classification Datasets
@@ -77,4 +79,12 @@ The following datasets are chosen to represent a range of dimensional complexiti
   - Computational efficiency
   - Stability across folds
 
+
+
+## Papers
+- https://www.mdpi.com/2076-3417/15/2/489
+- https://ieeexplore.ieee.org/document/9108264
+- https://ietresearch.onlinelibrary.wiley.com/doi/full/10.1049/cth2.12498
+- https://www.sciencedirect.com/science/article/abs/pii/S0169743923001302
+- https://arxiv.org/pdf/2402.11839 
 ---
