@@ -50,12 +50,12 @@ We need binary versions of GWO and TLBO because feature selection is a discrete 
 ## Fitness function
 
 In feature selection, we have two goals:
-Goal 1: high classification accuracy (low error rate)
-Goal 2: small number of features (simpler, cheaper model)
+- Goal 1: high classification accuracy (low error rate)
+- Goal 2: small number of features (simpler, cheaper model)
 
 But these goals are conflicting:
-Selecting more features → may increase accuracy
-Selecting fewer features → may reduce accuracy
+- Selecting more features → may increase accuracy
+- Selecting fewer features → may reduce accuracy
 
 We need to balance these goals → combine them into one fitness function.
 
