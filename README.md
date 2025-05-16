@@ -11,25 +11,14 @@ So, the problem statement is: "How can we search the space of possible feature s
 
 ## Why Feature Selection is Important in Machine Learning
 
-Feature selection is a crucial step in the machine learning pipeline that involves identifying the most relevant features (variables) in a dataset. Selecting the right subset of features can lead to several key benefits:
+Feature selection is a crucial step in the machine learning pipeline that involves identifying the most relevant features (variables) in a dataset.
 
-### 1. Improves Model Accuracy
-Irrelevant or redundant features can negatively affect model performance. By removing noise and focusing only on the most informative inputs, feature selection can significantly boost predictive accuracy.
-
-### 2. Reduces Overfitting
-When too many features are used—especially on small datasets—the model can overfit, meaning it performs well on training data but poorly on unseen data. Feature selection helps improve generalization.
-
-### 3. Decreases Computational Cost
-Fewer features mean less data to process, which leads to faster model training and inference. This is especially valuable in real-time systems or large-scale applications.
-
-### 4. Enhances Model Interpretability
-Simpler models with fewer features are easier to understand and interpret—especially critical in sensitive domains like healthcare, finance, or legal systems.
-
-### 5. Improves Data Quality
-Feature selection can expose irrelevant, noisy, or highly correlated features, helping improve the quality of the dataset itself.
-
-### 6. Essential in High-Dimensional Data
-In fields like genomics, text mining, or image processing, the number of features can be in the thousands. Feature selection becomes necessary to prevent the “curse of dimensionality.”
+- Improves Model Accuracy
+- Reduces Overfitting
+- Decreases Computational Cost
+- Enhances Model Interpretability
+- Improves Data Quality
+- Essential in High-Dimensional Data
 
 ---
 
@@ -73,6 +62,13 @@ where:
 ## Benchmark Classification Datasets
 
 The following datasets are chosen to represent a range of dimensional complexities:
+
+| Dataset | Dimensionality | Features | Classes |
+|---------|----------------|----------|---------|
+| [Breast Cancer Wisconsin](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic) | Low | 30 | 2 |
+| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia) | Medium | 279 | 16 |
+| [Leukemia (GSE9476)](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476) | High | 7129 | 2 |
+
 
 ### Low Dimension
 - Dataset: Breast Cancer Wisconsin  
