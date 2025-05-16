@@ -69,25 +69,6 @@ The following datasets are chosen to represent a range of dimensional complexiti
 | [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia) | Medium | 279 | 16 |
 | [Leukemia (GSE9476)](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476) | High | 7129 | 2 |
 
-
-### Low Dimension
-- Dataset: Breast Cancer Wisconsin  
-- Features: 30  
-- Classes: 2  
-- [View Dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
-
-### Medium Dimension
-- Dataset: Arrhythmia  
-- Features: 279  
-- Classes: 16  
-- [View Dataset](https://archive.ics.uci.edu/dataset/5/arrhythmia)
-
-### High Dimension
-- Dataset: Leukemia (Gene Expression)  
-- Features: 7129  
-- Classes: 2  
-- [View Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476)
-
 ---
 
 ## Goals
