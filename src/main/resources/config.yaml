@@ -1,0 +1,6 @@
+gwo.population.size: 30
+tlbo.population.size: 30
+max.iterations: 100
+fitness.alpha: 0.9
+fitness.beta: 0.1
+classifier.type: random_forest
