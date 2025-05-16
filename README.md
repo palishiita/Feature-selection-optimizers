@@ -24,6 +24,8 @@ Feature selection is a crucial step in the machine learning pipeline that involv
 
 ## Selected Optimizers
 
+We need binary versions of GWO and TLBO because feature selection is a discrete 0/1 problem, and binary adaptations allow the algorithms to explore the binary search space effectively by updating bit selections rather than continuous values.
+
 ### Grey Wolf Optimizer (GWO)
 - Inspired by the leadership and hunting behavior of grey wolves.
 - Models a hierarchical decision-making structure with alpha, beta, and delta wolves guiding the search.
@@ -31,8 +33,6 @@ Feature selection is a crucial step in the machine learning pipeline that involv
 ### Teaching-Learning-Based Optimization (TLBO)
 - Inspired by the educational dynamics between teachers and students in a classroom.
 - Operates in two phases: the Teacher Phase (global search) and Learner Phase (local improvement).
-
-We need binary versions of GWO and TLBO because feature selection is a discrete 0/1 problem, and binary adaptations allow the algorithms to explore the binary search space effectively by updating bit selections rather than continuous values.
 
 ---
 
