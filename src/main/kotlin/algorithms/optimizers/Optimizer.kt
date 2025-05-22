@@ -1,6 +1,5 @@
 package com.technosudo.algorithms.optimizers
 
-import algorithms.binary.TLBO
 import com.technosudo.algorithms.fitness.FitnessFunction
 import org.jetbrains.kotlinx.dataframe.DataFrame
 

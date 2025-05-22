@@ -11,39 +11,71 @@ So, the problem statement is: "How can we search the space of possible feature s
 
 ## Why Feature Selection is Important in Machine Learning
 
-Feature selection is a crucial step in the machine learning pipeline that involves identifying the most relevant features (variables) in a dataset. Selecting the right subset of features can lead to several key benefits:
+Feature selection is a crucial step in the machine learning pipeline that involves identifying the most relevant features (variables) in a dataset.
 
-### 1. Improves Model Accuracy
-Irrelevant or redundant features can negatively affect model performance. By removing noise and focusing only on the most informative inputs, feature selection can significantly boost predictive accuracy.
-
-### 2. Reduces Overfitting
-When too many features are used—especially on small datasets—the model can overfit, meaning it performs well on training data but poorly on unseen data. Feature selection helps improve generalization.
-
-### 3. Decreases Computational Cost
-Fewer features mean less data to process, which leads to faster model training and inference. This is especially valuable in real-time systems or large-scale applications.
-
-### 4. Enhances Model Interpretability
-Simpler models with fewer features are easier to understand and interpret—especially critical in sensitive domains like healthcare, finance, or legal systems.
-
-### 5. Improves Data Quality
-Feature selection can expose irrelevant, noisy, or highly correlated features, helping improve the quality of the dataset itself.
-
-### 6. Essential in High-Dimensional Data
-In fields like genomics, text mining, or image processing, the number of features can be in the thousands. Feature selection becomes necessary to prevent the “curse of dimensionality.”
+- Improves Model Accuracy
+- Reduces Overfitting
+- Decreases Computational Cost
+- Enhances Model Interpretability
+- Improves Data Quality
+- Essential in High-Dimensional Data
 
 ---
 
 ## Selected Optimizers
 
+We need binary versions of GWO and TLBO because feature selection is a discrete 0/1 problem, and binary adaptations allow the algorithms to explore the binary search space effectively by updating bit selections rather than continuous values.
+
 ### Grey Wolf Optimizer (GWO)
-- Inspired by the leadership and hunting behavior of grey wolves.
-- Models a hierarchical decision-making structure with alpha, beta, and delta wolves guiding the search.
+Inspired by: The social hierarchy and cooperative hunting strategies of grey wolves in nature.
+
+GWO mimics three main behaviors observed in grey wolves:
+1. Hierarchical Leadership
+   The population is divided into:
+- Alpha (α): The best solution so far (leader).
+- Beta (β) and Delta (δ): Second- and third-best solutions; help guide the search.
+- Omega (ω): The rest of the wolves; follow the top three.
+  This hierarchy helps balance exploitation (refining current good solutions) and exploration (searching new areas).
+
+2. Encircling the Prey (Optimum)
+- Wolves surround the prey from different directions.
+- In optimization terms, this means candidate solutions converge from different paths toward the current best solution.
+
+3. Hunting Behavior
+- Wolves update their positions based on the positions of α, β, and δ wolves.
+- The new solution is a weighted average of the top three wolves, which helps avoid premature convergence and ensures diverse exploration.
+
+#### Binary GWO for Feature Selection
+
+![BGW](img\gwo.png)
+
+---
 
 ### Teaching-Learning-Based Optimization (TLBO)
-- Inspired by the educational dynamics between teachers and students in a classroom.
-- Operates in two phases: the Teacher Phase (global search) and Learner Phase (local improvement).
+Inspired by: Teaching–learning processes in a classroom environment.
 
-We need binary versions of GWO and TLBO because feature selection is a discrete 0/1 problem, and binary adaptations allow the algorithms to explore the binary search space effectively by updating bit selections rather than continuous values.
+TLBO operates in two distinct phases:
+
+1. Teacher Phase (Global Search)
+- The teacher is the best-performing solution in the population.
+- The teacher attempts to raise the mean knowledge (fitness) of the class by sharing knowledge with all students.
+- Each learner updates their solution vector by moving closer to the teacher’s knowledge level.
+- This simulates global learning and helps guide the population toward better regions in the search space.
+
+2. Learner Phase (Local Refinement)
+- Learners interact and learn from one another.
+- A learner compares itself with a randomly chosen peer.
+- If the peer is better, the learner moves toward them.
+- This ensures peer-to-peer knowledge exchange and introduces local refinements to fine-tune solutions.
+
+Together, these two phases:
+- Encourage exploration via the teacher’s influence,
+- Encourage exploitation through collaborative learning among peers,
+- Provide a parameter-free optimization framework (no tuning of control parameters like crossover/mutation rates).
+
+#### Binary TLBO for Feature Selection
+
+![BTLBO](img\tlbo.png)
 
 ---
 
@@ -60,7 +92,9 @@ But these goals are conflicting:
 We need to balance these goals → combine them into one fitness function.
 
 It is defined as:
-`Fitness = α × ErrorRate + β × (Number of Selected Features / Total Features)`
+
+![fitness](img\fitness.png)
+
 where:
 - `α`: weight assigned to classification error (e.g., 0.9)
 - `β`: weight assigned to feature count penalty (e.g., 0.1)
@@ -68,29 +102,23 @@ where:
 - `Number of Selected Features`: count of selected features (1s in the binary vector)
 - `Total Features`: total number of features in the dataset
 
+The fitness function is used every time a new candidate solution (binary vector) is generated or evaluated. This happens:
+1. At the start — to evaluate the initial population (random feature subsets).
+2. During each iteration/epoch — whenever a solution is updated in either GWO or TLBO.
+3. To rank solutions — so we can identify the best wolves (α, β, δ) or the best learner (teacher).
+4. To guide selection — when choosing whether an updated solution is better and should replace the old one.
+
 ---
 
 ## Benchmark Classification Datasets
 
 The following datasets are chosen to represent a range of dimensional complexities:
 
-### Low Dimension
-- Dataset: Breast Cancer Wisconsin  
-- Features: 30  
-- Classes: 2  
-- [View Dataset](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
-
-### Medium Dimension
-- Dataset: Arrhythmia  
-- Features: 279  
-- Classes: 16  
-- [View Dataset](https://archive.ics.uci.edu/dataset/5/arrhythmia)
-
-### High Dimension
-- Dataset: Leukemia (Gene Expression)  
-- Features: 7129  
-- Classes: 2  
-- [View Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE9476)
+| Dataset | Dimensionality | Features | Classes |
+|---------|----------------|----------|---------|
+| [Breast Cancer Wisconsin](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic) | Low | 30 | 2 |
+| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia) | Medium | 279 | 16 |
+| [Leukemia (GSE9476)](https://github.com/jundongl/scikit-feature/blob/master/skfeature/data/leukemia.mat) | High | 7129 | 2 |
 
 ---
 
@@ -109,5 +137,5 @@ The following datasets are chosen to represent a range of dimensional complexiti
 - https://ieeexplore.ieee.org/document/9108264
 - https://ietresearch.onlinelibrary.wiley.com/doi/full/10.1049/cth2.12498
 - https://www.sciencedirect.com/science/article/abs/pii/S0169743923001302
-- https://arxiv.org/pdf/2402.11839 
+- https://arxiv.org/pdf/2402.11839
 ---

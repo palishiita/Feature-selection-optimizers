@@ -12,7 +12,7 @@ interface ClassifierWrapper {
 data class EvaluationMetrics(
     val accuracy: Double,
     val precision: Double,
-//    val recall: Double,
+    val recall: Double,
     val f1Score: Double,
-//    val confusionMatrix: Map<Pair<Any?, Any?>, Int>
+    //val confusionMatrix: Map<Pair<Any?, Any?>, Int>
 )
