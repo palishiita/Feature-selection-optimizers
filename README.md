@@ -47,7 +47,7 @@ GWO mimics three main behaviors observed in grey wolves:
 
 #### Binary GWO for Feature Selection
 
-![BGW](img\gwo.png)
+![BGW](https://github.com/palishiita/Feature-selection-optimizers/blob/main/img/gwo.png)
 
 ---
 
@@ -75,7 +75,7 @@ Together, these two phases:
 
 #### Binary TLBO for Feature Selection
 
-![BTLBO](img\tlbo.png)
+![BTLBO](https://github.com/palishiita/Feature-selection-optimizers/blob/main/img/tlbo.png)
 
 ---
 
@@ -93,7 +93,7 @@ We need to balance these goals → combine them into one fitness function.
 
 It is defined as:
 
-![fitness](img\fitness.png)
+![fitness](https://github.com/palishiita/Feature-selection-optimizers/blob/main/img/fitness.png)
 
 where:
 - `α`: weight assigned to classification error (e.g., 0.9)
