@@ -2,6 +2,7 @@ package com.technosudo
 
 import com.technosudo.algorithms.fitness.FitnessFunctionImplementation
 import com.technosudo.algorithms.optimizers.GWO
+import com.technosudo.algorithms.optimizers.TLBO
 import com.technosudo.data.DataLoader
 import com.technosudo.evaluation.wrappers.RandomForestWrapper
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -31,7 +32,9 @@ fun main() {
 
             // Run optimizer to get best feature mask
             val optimizer = GWO(name = "Binary Grey Wolf Optimizer", populationSize = 10, maxIterations = 30)
+            val optimizer2 = TLBO(name = "Teacher Learning Based Optimizer", populationSize = 10, maxIterations = 30)
             println("\nRunning ${optimizer.name} with ${optimizer.populationSize} wolves for ${optimizer.maxIterations} iterations...")
+            println("\nRunning ${optimizer2.name} with ${optimizer2.populationSize} wolves for ${optimizer2.maxIterations} iterations...")
 
             val fitness = FitnessFunctionImplementation(labels.toDataFrame())
             val result = optimizer.optimize(features, fitness)
