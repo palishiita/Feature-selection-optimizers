@@ -12,7 +12,9 @@ class TLBO(
     override val maxIterations: Int = 30,
     override val name: String = "Binary Teaching Learning Based Optimizer",
     private val logToCsv: Boolean = true,
-    private val logPath: String = "btlbo_log.csv"
+    private val dataName: String = "Unnamed_Dataset",
+    private val logPath: String = "src/main/kotlin/algorithms/logs/${dataName}_BTLBO_log.csv",
+    private val mutationRate: Double = 0.02
 ) : Optimizer {
 
     // Transfer function to convert continuous update to binary (0/1)
@@ -85,6 +87,18 @@ class TLBO(
         return newPopulation
     }
 
+    // Mutation: flip each bit with probability = mutationRate
+    private fun mutatePopulation(
+        population: List<List<Int>>,
+        mutationRate: Double
+    ): List<List<Int>> {
+        return population.map { individual ->
+            individual.map { gene ->
+                if (Random.nextDouble() < mutationRate) 1 - gene else gene
+            }
+        }
+    }
+
     override fun optimize(dataset: DataFrame<*>, fitnessFunction: FitnessFunction): DataFrame<*> {
         val numFeatures = dataset.columnNames().size
 
@@ -120,6 +134,11 @@ class TLBO(
 
             // Learner phase
             population = learnerPhase(population, fitnesses, numFeatures)
+            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            fitnesses = results.map { it.fitness }
+
+            // Mutation phase
+            population = mutatePopulation(population, mutationRate)
             results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
             fitnesses = results.map { it.fitness }
 
