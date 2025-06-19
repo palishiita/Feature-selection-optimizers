@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.io.read
 interface DataLoader : Iterable<Pair<DataFrame<*>, DataColumn<*>>> {
     companion object {
         fun bcw(): DataLoader = BCW()
-        fun leukemia(): DataLoader = Leukemia()
+        fun leukemia(): DataLoader = Arcene()
         fun arrhythmia(): DataLoader = Arrhythmia()
     }
 }
@@ -62,10 +62,10 @@ private class Arrhythmia : DataLoader {
     }
 }
 
-private class Leukemia : DataLoader {
+private class Arcene : DataLoader {
     override fun iterator(): Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
         return object : Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
-            var current: String? = "C:/Users/ishii/Documents/Feature-selection-optimizers/src/main/kotlin/data/datasets/leukemia/leukemia.csv"
+            var current: String? = "src/main/kotlin/data/datasets/arcene"
 
             override fun hasNext(): Boolean = current != null
             override fun next(): Pair<DataFrame<*>, DataColumn<*>> = current?.let {
