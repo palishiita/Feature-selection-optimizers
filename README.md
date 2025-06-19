@@ -148,7 +148,7 @@ Below is the typical sequence when running `Main.kt` on a dataset:
    - It returns a `FitnessResult` containing the penalized accuracy and the full
      set of metrics (accuracy, precision, recall, F1).
    - Statistics for the whole population—best (alpha) fitness, maximum,
-     minimum and average fitness—are appended to `bgwo_log2.csv` each
+     minimum and average fitness—are appended to `optimizer_log_file.csv` each
      iteration.
 4. **Select the best mask** after the final iteration and apply it to the
    dataset to keep only the chosen features.
