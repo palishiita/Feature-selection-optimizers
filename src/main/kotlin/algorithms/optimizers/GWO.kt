@@ -16,7 +16,7 @@ class GWO(
     override val maxIterations: Int = 30,
     override val name: String = "Binary Grey Wolf Optimizer",
     private val logToCsv: Boolean = true,
-    private val logPath: String = "bgwo_log2.csv",
+    private val logPath: String = "C:/Users/ishii/Documents/Feature-selection-optimizers/src/main/kotlin/algorithms/logs/bgwo_arrhythmia_logs.csv",
     private val mutationRate: Double = 0.02,
     private val minA: Double = 0.4
 ) : Optimizer {
