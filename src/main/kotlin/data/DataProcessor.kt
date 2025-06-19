@@ -2,6 +2,7 @@ package com.technosudo.data
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.update
 
 object DataProcessor {
@@ -26,7 +27,13 @@ object DataProcessor {
                 }
             }
         }
-
         return normalized
+    }
+
+    fun DataFrame<*>.nameColumns(): DataFrame<*> {
+        this.columnNames()
+            .mapIndexed { index, name ->
+                this.rename(name).to(index) }
+        return this
     }
 }
