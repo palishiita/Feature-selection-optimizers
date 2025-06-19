@@ -11,10 +11,10 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import kotlin.random.Random
 
 fun main() {
-    val dataLoaders = listOf(
-        //"BCW" to DataLoader.bcw()
+    val dataLoaders = mapOf(
+        "BCW" to DataLoader.bcw(),
         "Arrhythmia" to DataLoader.arrhythmia(),
-        // "Leukemia" to DataLoader.leukemia()
+        "Semi-conductor" to DataLoader.semiConductor()
     )
 
     for ((name, loader) in dataLoaders) {

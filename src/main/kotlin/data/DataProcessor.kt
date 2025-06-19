@@ -2,7 +2,13 @@ package com.technosudo.data
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.size
 
 object DataProcessor {
 
@@ -26,7 +32,38 @@ object DataProcessor {
                 }
             }
         }
-
         return normalized
+    }
+
+    fun DataFrame<*>.castToDouble(): DataFrame<*> =
+        this.convert(*columnNames().toTypedArray()).to<Double?>()
+
+
+
+    fun DataFrame<*>.nameColumns(): DataFrame<*> {
+        this.columnNames()
+            .mapIndexed { index, name ->
+                this.rename(name).to(index) }
+        return this
+    }
+
+    fun DataFrame<*>.removeColForNullShare(threshold: Double): DataFrame<*> {
+        val columnsToRemove = this.columns()
+            .filter { col ->
+                val nullCount = col.count { it == null }
+                threshold < nullCount / col.size}
+            .map { it.name() }
+
+        println("\nColumns to remove (nulls > ${threshold * 100}%): $columnsToRemove")
+        return this.remove(*columnsToRemove.toTypedArray())
+    }
+
+    fun DataFrame<*>.removeColIfNullPresent(): DataFrame<*> {
+        val columnsToRemove = this.columns()
+            .filter { col -> col.hasNulls() }
+            .map { it.name() }
+
+        println("\nColumns to remove : $columnsToRemove")
+        return this.remove(*columnsToRemove.toTypedArray())
     }
 }
