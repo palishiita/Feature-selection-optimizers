@@ -1,11 +1,14 @@
 package com.technosudo.algorithms.optimizers
 
 import com.technosudo.algorithms.fitness.FitnessFunction
+import com.technosudo.algorithms.fitness.FitnessResult
+import com.technosudo.evaluation.EvaluationMetrics
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.exp
+import kotlin.math.max
 import kotlin.random.Random
 
 class GWO(
@@ -13,14 +16,19 @@ class GWO(
     override val maxIterations: Int = 30,
     override val name: String = "Binary Grey Wolf Optimizer",
     private val logToCsv: Boolean = true,
-    private val logPath: String = "bgwo_log2.csv"
+    private val logPath: String = "bgwo_log2.csv",
+    private val mutationRate: Double = 0.02,
+    private val minA: Double = 0.4
 ) : Optimizer {
 
     private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
     private fun transfer(prob: Double): Int = if (Random.nextDouble() < prob) 1 else 0
 
     override fun optimize(dataset: DataFrame<*>, fitnessFunction: FitnessFunction): DataFrame<*> {
+        require(populationSize >= 3) { "GWO requires a population size of at least 3." }
+
         val numFeatures = dataset.columnNames().size
+        require(numFeatures > 0) { "Dataset must have at least one feature." }
 
         var wolves = List(populationSize) {
             List(numFeatures) { if (Random.nextDouble() > 0.5) 1 else 0 }
@@ -36,16 +44,23 @@ class GWO(
 
         if (logToCsv) {
             File(logPath).printWriter().use { out ->
-                out.println("iteration,alpha_fitness,features_selected,alpha_mask")
+                out.println(
+                    "iteration,alpha_fitness,max_fitness,min_fitness,avg_fitness," +
+                            "alpha_accuracy,alpha_precision,alpha_recall,alpha_f1,features_selected,alpha_mask"
+                )
             }
         }
 
         println("Starting $name with $populationSize wolves and $maxIterations iterations.")
 
-        repeat(maxIterations) { iter ->
-            wolves = wolves.map { wolf ->
-                val fitness = fitnessFunction.evaluate(dataset, wolf)
+        var alphaMetrics = EvaluationMetrics(0.0, 0.0, 0.0, 0.0)
 
+        repeat(maxIterations) { iter ->
+            val results: List<FitnessResult> = wolves.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            val fitnesses = results.map { it.fitness }
+
+            wolves.zip(results).forEach { (wolf, result) ->
+                val fitness = result.fitness
                 when {
                     fitness > alphaScore -> {
                         delta = beta
@@ -54,6 +69,7 @@ class GWO(
                         betaScore = alphaScore
                         alpha = wolf
                         alphaScore = fitness
+                        alphaMetrics = result.metrics
                     }
                     fitness > betaScore -> {
                         delta = beta
@@ -66,11 +82,13 @@ class GWO(
                         deltaScore = fitness
                     }
                 }
-
-                wolf
             }
 
-            val a = 2.0 * (1.0 - iter.toDouble() / maxIterations)
+            val maxFitnessIter = fitnesses.maxOrNull() ?: Double.NaN
+            val minFitnessIter = fitnesses.minOrNull() ?: Double.NaN
+            val avgFitnessIter = fitnesses.average()
+
+            val a = max(2.0 * (1.0 - iter.toDouble() / maxIterations), minA)
 
             wolves = wolves.map { wolf ->
                 List(numFeatures) { i ->
@@ -94,12 +112,32 @@ class GWO(
                 }
             }
 
+            wolves = wolves.map { wolf ->
+                wolf.map { bit -> if (Random.nextDouble() < mutationRate) 1 - bit else bit }
+            }
+
             val featuresSelected = alpha.count { it == 1 }
-            println("Iteration ${iter + 1}/$maxIterations: Alpha Score = ${"%.4f".format(alphaScore)}, Features Selected = $featuresSelected")
+            println(
+                "Iteration ${iter + 1}/$maxIterations: Alpha Score = ${"%.4f".format(alphaScore)}, " +
+                        "Max = ${"%.4f".format(maxFitnessIter)}, Min = ${"%.4f".format(minFitnessIter)}, " +
+                        "Avg = ${"%.4f".format(avgFitnessIter)}, " +
+                        "Acc = ${"%.4f".format(alphaMetrics.accuracy)}, " +
+                        "Prec = ${"%.4f".format(alphaMetrics.precision)}, " +
+                        "Rec = ${"%.4f".format(alphaMetrics.recall)}, " +
+                        "F1 = ${"%.4f".format(alphaMetrics.f1Score)}, Features Selected = $featuresSelected"
+            )
+
 
             if (logToCsv) {
                 File(logPath).appendText(
-                    "${iter + 1},${"%.6f".format(alphaScore)},$featuresSelected,${alpha.joinToString("")}\n"
+                    "${iter + 1},${"%.6f".format(alphaScore)}," +
+                            "${"%.6f".format(maxFitnessIter)},${"%.6f".format(minFitnessIter)}," +
+                            "${"%.6f".format(avgFitnessIter)}," +
+                            "${"%.6f".format(alphaMetrics.accuracy)}," +
+                            "${"%.6f".format(alphaMetrics.precision)}," +
+                            "${"%.6f".format(alphaMetrics.recall)}," +
+                            "${"%.6f".format(alphaMetrics.f1Score)}," +
+                            "$featuresSelected,${alpha.joinToString("")}\n"
                 )
             }
         }
