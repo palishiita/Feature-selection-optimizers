@@ -30,20 +30,20 @@ We need binary versions of GWO and TLBO because feature selection is a discrete 
 Inspired by: The social hierarchy and cooperative hunting strategies of grey wolves in nature.
 
 GWO mimics three main behaviors observed in grey wolves:
-1. Hierarchical Leadership
+1. **Hierarchical Leadership**  
    The population is divided into:
-- Alpha (α): The best solution so far (leader).
-- Beta (β) and Delta (δ): Second- and third-best solutions; help guide the search.
-- Omega (ω): The rest of the wolves; follow the top three.
-  This hierarchy helps balance exploitation (refining current good solutions) and exploration (searching new areas).
+    - Alpha (α): The best solution so far (leader).
+    - Beta (β) and Delta (δ): Second- and third-best solutions; help guide the search.
+    - Omega (ω): The rest of the wolves; follow the top three.  
+      This hierarchy helps balance exploitation (refining current good solutions) and exploration (searching new areas).
 
-2. Encircling the Prey (Optimum)
-- Wolves surround the prey from different directions.
-- In optimization terms, this means candidate solutions converge from different paths toward the current best solution.
+2. **Encircling the Prey (Optimum)**
+    - Wolves surround the prey from different directions.
+    - In optimization terms, this means candidate solutions converge from different paths toward the current best solution.
 
-3. Hunting Behavior
-- Wolves update their positions based on the positions of α, β, and δ wolves.
-- The new solution is a weighted average of the top three wolves, which helps avoid premature convergence and ensures diverse exploration.
+3. **Hunting Behavior**
+    - Wolves update their positions based on the positions of α, β, and δ wolves.
+    - The new solution is a weighted average of the top three wolves, which helps avoid premature convergence and ensures diverse exploration.
 
 #### Binary GWO for Feature Selection
 
@@ -56,22 +56,22 @@ Inspired by: Teaching–learning processes in a classroom environment.
 
 TLBO operates in two distinct phases:
 
-1. Teacher Phase (Global Search)
-- The teacher is the best-performing solution in the population.
-- The teacher attempts to raise the mean knowledge (fitness) of the class by sharing knowledge with all students.
-- Each learner updates their solution vector by moving closer to the teacher’s knowledge level.
-- This simulates global learning and helps guide the population toward better regions in the search space.
+1. **Teacher Phase (Global Search)**
+    - The teacher is the best-performing solution in the population.
+    - The teacher attempts to raise the mean knowledge (fitness) of the class by sharing knowledge with all students.
+    - Each learner updates their solution vector by moving closer to the teacher’s knowledge level.
+    - This simulates global learning and helps guide the population toward better regions in the search space.
 
-2. Learner Phase (Local Refinement)
-- Learners interact and learn from one another.
-- A learner compares itself with a randomly chosen peer.
-- If the peer is better, the learner moves toward them.
-- This ensures peer-to-peer knowledge exchange and introduces local refinements to fine-tune solutions.
+2. **Learner Phase (Local Refinement)**
+    - Learners interact and learn from one another.
+    - A learner compares itself with a randomly chosen peer.
+    - If the peer is better, the learner moves toward them.
+    - This ensures peer-to-peer knowledge exchange and introduces local refinements to fine-tune solutions.
 
 Together, these two phases:
-- Encourage exploration via the teacher’s influence,
-- Encourage exploitation through collaborative learning among peers,
-- Provide a parameter-free optimization framework (no tuning of control parameters like crossover/mutation rates).
+- Encourage exploration via the teacher’s influence
+- Encourage exploitation through collaborative learning among peers
+- Provide a parameter-free optimization framework (no tuning of control parameters like crossover/mutation rates)
 
 #### Binary TLBO for Feature Selection
 
@@ -114,21 +114,21 @@ The fitness function is used every time a new candidate solution (binary vector)
 
 The following datasets are chosen to represent a range of dimensional complexities:
 
-| Dataset | Dimensionality | Features | Classes |
-|---------|----------------|----------|---------|
-| [Breast Cancer Wisconsin](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic) | Low | 30 | 2 |
-| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia) | Medium | 279 | 16 |
-| [Leukemia (GSE9476)](https://github.com/jundongl/scikit-feature/blob/master/skfeature/data/leukemia.mat) | High | 7129 | 2 |
+| Dataset                                                                 | Dimensionality | Features | Classes |
+|-------------------------------------------------------------------------|----------------|----------|---------|
+| [Breast Cancer Wisconsin](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic) | Low            | 30       | 2       |
+| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia)         | Medium         | 279      | 16      |
+| [Arcene](https://archive.ics.uci.edu/dataset/19/arcene)                | High           | 10,000   | 2       |
 
 ---
 
 ## Goals
 - Evaluate the effectiveness of GWO and TLBO for feature selection across different dataset complexities.
 - Compare based on:
-  - Classification accuracy
-  - Number of selected features
-  - Computational efficiency
-  - Stability across folds
+    - Classification accuracy
+    - Number of selected features
+    - Computational efficiency
+    - Stability across folds
 
 ---
 
@@ -136,28 +136,17 @@ The following datasets are chosen to represent a range of dimensional complexiti
 
 Below is the typical sequence when running `Main.kt` on a dataset:
 
-1. **Load the raw CSV** via `DataLoader`.  Each loader normalizes numeric
-   columns through `DataProcessor.minMaxNormalize` so all features fall in the
-   range `[0, 1]`.
-2. **Initialize the optimizer** (`GWO` or `TLBO`) with a population and the
-   desired number of iterations.
+1. **Load the raw CSV** via `DataLoader`. Each loader normalizes numeric columns through `DataProcessor.minMaxNormalize` so all features fall in the range `[0, 1]`.
+2. **Initialize the optimizer** (`GWO` or `TLBO`) with a population and the desired number of iterations.
 3. **Iterative search**
-   - For every wolf/learner, `evaluateDetailed` trains a temporary
-     `RandomForestWrapper` on an internal 80/20 split of the *current* feature
-     subset.
-   - It returns a `FitnessResult` containing the penalized accuracy and the full
-     set of metrics (accuracy, precision, recall, F1).
-   - Statistics for the whole population—best (alpha) fitness, maximum,
-     minimum and average fitness—are appended to `optimizer_log_file.csv` each
-     iteration.
-4. **Select the best mask** after the final iteration and apply it to the
-   dataset to keep only the chosen features.
-5. **Train the definitive model** on a fresh 80/20 split of the reduced
-   dataset and evaluate the final metrics.
+    - For every wolf/learner, `evaluateDetailed` trains a temporary `RandomForestWrapper` on an internal 80/20 split of the *current* feature subset.
+    - It returns a `FitnessResult` containing the penalized accuracy and the full set of metrics (accuracy, precision, recall, F1).
+    - Statistics for the whole population—best (alpha) fitness, maximum, minimum and average fitness—are appended to `optimizer_log_file.csv` each iteration.
+4. **Select the best mask** after the final iteration and apply it to the dataset to keep only the chosen features.
+5. **Train the definitive model** on a fresh 80/20 split of the reduced dataset and evaluate the final metrics.
    Results are printed to the console.
 
-`RandomForestWrapper` makes predictions in batches, so large datasets can be
-processed without exhausting memory.
+`RandomForestWrapper` makes predictions in batches, so large datasets can be processed without exhausting memory.
 
 ---
 
@@ -167,4 +156,3 @@ processed without exhausting memory.
 - https://ietresearch.onlinelibrary.wiley.com/doi/full/10.1049/cth2.12498
 - https://www.sciencedirect.com/science/article/abs/pii/S0169743923001302
 - https://arxiv.org/pdf/2402.11839
----
