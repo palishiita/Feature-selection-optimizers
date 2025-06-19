@@ -17,7 +17,7 @@ interface DataLoader : Iterable<Pair<DataFrame<*>, DataColumn<*>>> {
 private class BCW : DataLoader {
     override fun iterator(): Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
         return object : Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
-            var current: String? = "C:/Users/ishii/Documents/Feature-selection-optimizers/src/main/kotlin/data/datasets/breast-cancer-wisconsin/wdbc.data"
+            var current: String? = "src/main/kotlin/data/datasets/breast-cancer-wisconsin/wdbc.data"
 
             override fun hasNext(): Boolean = current != null
             override fun next(): Pair<DataFrame<*>, DataColumn<*>> = current?.let {
@@ -47,7 +47,7 @@ private class BCW : DataLoader {
 private class Arrhythmia : DataLoader {
     override fun iterator(): Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
         return object : Iterator<Pair<DataFrame<*>, DataColumn<*>>> {
-            var current: String? = "C:/Users/ishii/Documents/Feature-selection-optimizers/src/main/kotlin/data/datasets/arrhythmia/arrhythmia.data"
+            var current: String? = "src/main/kotlin/data/datasets/arrhythmia/arrhythmia.data"
 
             override fun hasNext(): Boolean = current != null
             override fun next(): Pair<DataFrame<*>, DataColumn<*>> = current?.let {
