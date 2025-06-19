@@ -132,6 +132,35 @@ The following datasets are chosen to represent a range of dimensional complexiti
 
 ---
 
+## Workflow
+
+Below is the typical sequence when running `Main.kt` on a dataset:
+
+1. **Load the raw CSV** via `DataLoader`.  Each loader normalizes numeric
+   columns through `DataProcessor.minMaxNormalize` so all features fall in the
+   range `[0, 1]`.
+2. **Initialize the optimizer** (`GWO` or `TLBO`) with a population and the
+   desired number of iterations.
+3. **Iterative search**
+   - For every wolf/learner, `evaluateDetailed` trains a temporary
+     `RandomForestWrapper` on an internal 80/20 split of the *current* feature
+     subset.
+   - It returns a `FitnessResult` containing the penalized accuracy and the full
+     set of metrics (accuracy, precision, recall, F1).
+   - Statistics for the whole population—best (alpha) fitness, maximum,
+     minimum and average fitness—are appended to `optimizer_log_file.csv` each
+     iteration.
+4. **Select the best mask** after the final iteration and apply it to the
+   dataset to keep only the chosen features.
+5. **Train the definitive model** on a fresh 80/20 split of the reduced
+   dataset and evaluate the final metrics.
+   Results are printed to the console.
+
+`RandomForestWrapper` makes predictions in batches, so large datasets can be
+processed without exhausting memory.
+
+---
+
 ## Papers
 - https://www.mdpi.com/2076-3417/15/2/489
 - https://ieeexplore.ieee.org/document/9108264

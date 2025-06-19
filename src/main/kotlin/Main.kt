@@ -12,8 +12,8 @@ import kotlin.random.Random
 
 fun main() {
     val dataLoaders = listOf(
-        "BCW" to DataLoader.bcw()
-        // "Arrhythmia" to DataLoader.arrhythmia(),
+        //"BCW" to DataLoader.bcw()
+        "Arrhythmia" to DataLoader.arrhythmia(),
         // "Leukemia" to DataLoader.leukemia()
     )
 

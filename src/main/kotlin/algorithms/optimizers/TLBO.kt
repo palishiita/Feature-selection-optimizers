@@ -4,6 +4,7 @@ import com.technosudo.algorithms.fitness.FitnessFunction
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
+import java.util.Locale
 import kotlin.random.Random
 
 class TLBO(
@@ -78,8 +79,6 @@ class TLBO(
                 }
             }
 
-            // Accept new learner if fitness improves
-            // Fitness evaluation will be done outside this function
             newPopulation[i] = newLearner
         }
 
@@ -94,17 +93,20 @@ class TLBO(
             List(numFeatures) { if (Random.nextDouble() > 0.5) 1 else 0 }
         }
 
-        // Evaluate initial fitnesses
-        var fitnesses = population.map { fitnessFunction.evaluate(dataset, it) }
+        var results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+        var fitnesses = results.map { it.fitness }
 
-        // Track best solution
         var bestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
         var bestSolution = population[bestIndex]
         var bestFitness = fitnesses[bestIndex]
+        var bestMetrics = results[bestIndex].metrics
 
         if (logToCsv) {
             File(logPath).printWriter().use { out ->
-                out.println("iteration,best_fitness,features_selected,best_mask")
+                out.println(
+                    "iteration|best_fitness|max_fitness|min_fitness|avg_fitness," +
+                            "best_accuracy|best_precision|best_recall|best_f1|features_selected|best_mask"
+                )
             }
         }
 
@@ -113,26 +115,55 @@ class TLBO(
         repeat(maxIterations) { iter ->
             // Teacher phase
             population = teacherPhase(population, fitnesses, numFeatures)
-            fitnesses = population.map { fitnessFunction.evaluate(dataset, it) }
+            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            fitnesses = results.map { it.fitness }
 
             // Learner phase
             population = learnerPhase(population, fitnesses, numFeatures)
-            fitnesses = population.map { fitnessFunction.evaluate(dataset, it) }
+            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            fitnesses = results.map { it.fitness }
 
-            // Update best solution
+            // Update best solution and metrics
             val currentBestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
             val currentBestFitness = fitnesses[currentBestIndex]
             if (currentBestFitness > bestFitness) {
                 bestFitness = currentBestFitness
                 bestSolution = population[currentBestIndex]
+                bestMetrics = results[currentBestIndex].metrics
             }
 
+            val maxFitnessIter = fitnesses.maxOrNull() ?: Double.NaN
+            val minFitnessIter = fitnesses.minOrNull() ?: Double.NaN
+            val avgFitnessIter = fitnesses.average()
             val featuresSelected = bestSolution.count { it == 1 }
-            println("Iteration ${iter + 1}/$maxIterations: Best Fitness = ${"%.4f".format(bestFitness)}, Features Selected = $featuresSelected")
+
+            println(
+                "Iteration ${iter + 1}/$maxIterations: Best Fitness = ${"%.4f".format(Locale.US, bestFitness)}, " +
+                        "Max = ${"%.4f".format(Locale.US, maxFitnessIter)}, Min = ${"%.4f".format(Locale.US, minFitnessIter)}, " +
+                        "Avg = ${"%.4f".format(Locale.US, avgFitnessIter)}, " +
+                        "Acc = ${"%.4f".format(Locale.US, bestMetrics.accuracy)}, " +
+                        "Prec = ${"%.4f".format(Locale.US, bestMetrics.precision)}, " +
+                        "Rec = ${"%.4f".format(Locale.US, bestMetrics.recall)}, " +
+                        "F1 = ${"%.4f".format(Locale.US, bestMetrics.f1Score)}, Features Selected = $featuresSelected"
+            )
 
             if (logToCsv) {
                 File(logPath).appendText(
-                    "${iter + 1},${"%.6f".format(bestFitness)},$featuresSelected,${bestSolution.joinToString("")}\n"
+                    String.format(
+                        Locale.US,
+                        "%d,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%d,%s\n",
+                        iter + 1,
+                        bestFitness,
+                        maxFitnessIter,
+                        minFitnessIter,
+                        avgFitnessIter,
+                        bestMetrics.accuracy,
+                        bestMetrics.precision,
+                        bestMetrics.recall,
+                        bestMetrics.f1Score,
+                        featuresSelected,
+                        bestSolution.joinToString("")
+                    )
                 )
             }
         }
