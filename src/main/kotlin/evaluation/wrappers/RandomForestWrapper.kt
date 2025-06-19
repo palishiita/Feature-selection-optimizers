@@ -10,7 +10,7 @@ import smile.data.formula.Formula
 import smile.data.DataFrame as SmileFrame
 import smile.data.vector.IntVector
 
-class RandomForestWrapper : ClassifierWrapper {
+class RandomForestWrapper(private val batchSize: Int = 1000) : ClassifierWrapper {
 
     private lateinit var model: RandomForest
     private lateinit var labelEncoder: Map<Double, Int>
@@ -29,14 +29,19 @@ class RandomForestWrapper : ClassifierWrapper {
         }
 
         // Convert DataFrame into a transposed 2D array with rows of Doubles
-        val data: Array<DoubleArray> = Array(rowCount) { rowIndex ->
-            DoubleArray(columnNames.size) { colIndex ->
-                val value = df[rowIndex][colIndex]
-                when (value) {
-                    is Number -> value.toDouble()
-                    is String -> value.toDoubleOrNull() ?: Double.NaN
-                    else -> Double.NaN
+        val data: Array<DoubleArray> = Array(rowCount) { DoubleArray(columnNames.size) }
+
+        for (chunk in (0 until rowCount).chunked(batchSize)) {
+            chunk.forEach { rowIndex ->
+                val row = DoubleArray(columnNames.size) { colIndex ->
+                    val value = df[rowIndex][colIndex]
+                    when (value) {
+                        is Number -> value.toDouble()
+                        is String -> value.toDoubleOrNull() ?: Double.NaN
+                        else -> Double.NaN
+                    }
                 }
+                data[rowIndex] = row
             }
         }
 
@@ -85,13 +90,14 @@ class RandomForestWrapper : ClassifierWrapper {
 
 
     override fun predict(test: DataFrame<*>): List<Double> {
-        // Convert test data to Smile DataFrame
-        val smileTest = smileDataFrame(test)
+        val rowCount = test.rowsCount()
+        val predictions = mutableListOf<Int>()
+        for (chunk in (0 until rowCount).chunked(batchSize)) {
+            val batch = chunk.map { test[it] }.toDataFrame()
+            val smileBatch = smileDataFrame(batch)
+            predictions += model.predict(smileBatch).toList()
+        }
 
-        // Predict encoded labels (as Ints)
-        val predictions: IntArray = model.predict(smileTest)
-
-        // Decode Int labels back to original Double labels
         return predictions.map { labelDecoder[it] ?: error("Unknown predicted label: $it") }
     }
 
