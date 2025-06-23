@@ -123,8 +123,8 @@ class TLBO(
         if (logToCsv) {
             File(logPath).printWriter().use { out ->
                 out.println(
-                    "iteration|best_fitness|max_fitness|min_fitness|avg_fitness," +
-                            "best_accuracy|best_precision|best_recall|best_f1|features_selected|best_mask"
+                    "iteration,best_fitness,max_fitness,min_fitness,avg_fitness," +
+                            "best_accuracy,best_precision,best_recall,best_f1,features_selected,best_mask"
                 )
             }
         }

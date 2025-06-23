@@ -1,4 +1,4 @@
-iteration|best_fitness|max_fitness|min_fitness|avg_fitness,best_accuracy|best_precision|best_recall|best_f1|features_selected|best_mask
+iteration,best_fitness,max_fitness,min_fitness,avg_fitness,best_accuracy,best_precision,best_recall,best_f1,features_selected,best_mask
 1,0.934737,0.934737,0.880234,0.905231,0.973684,0.973986,0.968760,0.971277,12,010011000110001110111000000010
 2,0.934737,0.929532,0.887368,0.912851,0.973684,0.973986,0.968760,0.971277,12,010011000110001110111000000010
 3,0.946433,0.946433,0.907018,0.918585,0.982456,0.986667,0.975610,0.980743,11,000100010011010110000111000010
