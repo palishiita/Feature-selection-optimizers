@@ -1,10 +1,13 @@
 package com.technosudo.algorithms.optimizers
 
 import com.technosudo.algorithms.fitness.FitnessFunction
+import com.technosudo.algorithms.fitness.FitnessResult
+import kotlinx.coroutines.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
 import java.util.Locale
+import kotlin.math.exp
 import kotlin.random.Random
 
 class TLBO(
@@ -17,97 +20,98 @@ class TLBO(
     private val mutationRate: Double = 0.02
 ) : Optimizer {
 
-    // Transfer function to convert continuous update to binary (0/1)
+    private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
+
     private fun transfer(prob: Double): Int = if (Random.nextDouble() < prob) 1 else 0
 
-    // Teacher Phase: improve learners by moving towards the teacher (best solution)
     private fun teacherPhase(
-        population: List<List<Int>>,
+        population: List<BooleanArray>,
         fitnesses: List<Double>,
         numFeatures: Int
-    ): List<List<Int>> {
+    ): List<BooleanArray> {
         val teacherIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
         val teacher = population[teacherIndex]
 
-        // Calculate mean of each feature across population
-        val meanFeatures = DoubleArray(numFeatures) { featureIndex ->
-            population.sumOf { it[featureIndex].toDouble() } / population.size
+        val meanFeatures = DoubleArray(numFeatures) { j ->
+            population.sumOf { if (it[j]) 1.0 else 0.0 } / population.size
         }
 
         return population.map { learner ->
-            List(numFeatures) { i ->
-                // Teaching factor TF randomly 1 or 2
+            BooleanArray(numFeatures) { i ->
                 val TF = if (Random.nextDouble() < 0.5) 1 else 2
-                // Update rule: learner moves towards teacher knowledge
-                val diff = teacher[i] - TF * meanFeatures[i]
-                // Use sigmoid to map to probability of selecting feature
-                val prob = 1.0 / (1.0 + kotlin.math.exp(-diff))
-                transfer(prob)
+                val diff = (if (teacher[i]) 1.0 else 0.0) - TF * meanFeatures[i]
+                val prob = sigmoid(diff)
+                transfer(prob) == 1
             }
         }
     }
 
-    // Learner Phase: learners learn from each other by pairwise interaction
     private fun learnerPhase(
-        population: List<List<Int>>,
+        population: List<BooleanArray>,
         fitnesses: List<Double>,
         numFeatures: Int
-    ): List<List<Int>> {
+    ): List<BooleanArray> {
         val newPopulation = population.toMutableList()
 
         for (i in population.indices) {
             val learner = population[i]
-            // Select a random peer different from the learner
             var peerIndex: Int
             do {
                 peerIndex = Random.nextInt(population.size)
             } while (peerIndex == i)
-            val peer = population[peerIndex]
 
+            val peer = population[peerIndex]
             val learnerFitness = fitnesses[i]
             val peerFitness = fitnesses[peerIndex]
 
-            val newLearner = List(numFeatures) { j ->
-                if (peerFitness > learnerFitness) {
-                    // Move learner towards peer
-                    val diff = peer[j] - learner[j]
-                    val prob = 1.0 / (1.0 + kotlin.math.exp((-diff).toDouble()))
-                    transfer(prob)
-                } else {
-                    // Move learner away from peer
-                    val diff = learner[j] - peer[j]
-                    val prob = 1.0 / (1.0 + kotlin.math.exp((-diff).toDouble()))
-                    transfer(prob)
-                }
+            val newLearner = BooleanArray(numFeatures) { j ->
+                val diff = if (peerFitness > learnerFitness)
+                    (if (peer[j]) 1 else 0) - (if (learner[j]) 1 else 0)
+                else
+                    (if (learner[j]) 1 else 0) - (if (peer[j]) 1 else 0)
+
+                val prob = sigmoid(diff.toDouble())
+                transfer(prob) == 1
             }
 
-            newPopulation[i] = newLearner
+            if (!learner.contentEquals(newLearner)) {
+                newPopulation[i] = newLearner
+            }
         }
-
         return newPopulation
     }
 
-    // Mutation: flip each bit with probability = mutationRate
     private fun mutatePopulation(
-        population: List<List<Int>>,
+        population: List<BooleanArray>,
         mutationRate: Double
-    ): List<List<Int>> {
+    ): List<BooleanArray> {
         return population.map { individual ->
-            individual.map { gene ->
-                if (Random.nextDouble() < mutationRate) 1 - gene else gene
+            BooleanArray(individual.size) { i ->
+                if (Random.nextDouble() < mutationRate) !individual[i] else individual[i]
             }
         }
+    }
+
+    private suspend fun evaluatePopulationParallel(
+        dataset: DataFrame<*>,
+        population: List<BooleanArray>,
+        fitnessFunction: FitnessFunction
+    ): List<FitnessResult> = coroutineScope {
+        population.map { mask ->
+            async(Dispatchers.Default) {
+                fitnessFunction.evaluateDetailed(dataset, mask.toList().map { if (it) 1 else 0 })
+            }
+        }.awaitAll()
     }
 
     override fun optimize(dataset: DataFrame<*>, fitnessFunction: FitnessFunction): DataFrame<*> {
         val numFeatures = dataset.columnNames().size
 
-        // Initialize population randomly (binary vectors)
         var population = List(populationSize) {
-            List(numFeatures) { if (Random.nextDouble() > 0.5) 1 else 0 }
+            BooleanArray(numFeatures) { Random.nextBoolean() }
         }
 
-        var results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+        var results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
         var fitnesses = results.map { it.fitness }
 
         var bestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
@@ -115,6 +119,7 @@ class TLBO(
         var bestFitness = fitnesses[bestIndex]
         var bestMetrics = results[bestIndex].metrics
 
+        val logBuffer = StringBuilder()
         if (logToCsv) {
             File(logPath).printWriter().use { out ->
                 out.println(
@@ -127,22 +132,18 @@ class TLBO(
         println("Starting $name with $populationSize learners and $maxIterations iterations.")
 
         repeat(maxIterations) { iter ->
-            // Teacher phase
             population = teacherPhase(population, fitnesses, numFeatures)
-            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
 
-            // Learner phase
             population = learnerPhase(population, fitnesses, numFeatures)
-            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
 
-            // Mutation phase
             population = mutatePopulation(population, mutationRate)
-            results = population.map { fitnessFunction.evaluateDetailed(dataset, it) }
+            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
 
-            // Update best solution and metrics
             val currentBestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
             val currentBestFitness = fitnesses[currentBestIndex]
             if (currentBestFitness > bestFitness) {
@@ -154,7 +155,7 @@ class TLBO(
             val maxFitnessIter = fitnesses.maxOrNull() ?: Double.NaN
             val minFitnessIter = fitnesses.minOrNull() ?: Double.NaN
             val avgFitnessIter = fitnesses.average()
-            val featuresSelected = bestSolution.count { it == 1 }
+            val featuresSelected = bestSolution.count { it }
 
             println(
                 "Iteration ${iter + 1}/$maxIterations: Best Fitness = ${"%.4f".format(Locale.US, bestFitness)}, " +
@@ -167,7 +168,7 @@ class TLBO(
             )
 
             if (logToCsv) {
-                File(logPath).appendText(
+                logBuffer.append(
                     String.format(
                         Locale.US,
                         "%d,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%d,%s\n",
@@ -181,13 +182,17 @@ class TLBO(
                         bestMetrics.recall,
                         bestMetrics.f1Score,
                         featuresSelected,
-                        bestSolution.joinToString("")
+                        bestSolution.joinToString("") { if (it) "1" else "0" }
                     )
                 )
             }
         }
 
+        if (logToCsv) {
+            File(logPath).appendText(logBuffer.toString())
+        }
+
         println("$name finished. Best fitness: ${"%.4f".format(bestFitness)}")
-        return listOf(bestSolution).toDataFrame()
+        return listOf(bestSolution.map { if (it) 1 else 0 }).toDataFrame()
     }
 }
