@@ -18,9 +18,8 @@ class GWO(
     private val logToCsv: Boolean = true,
     private val dataName: String = "Unnamed_Dataset",
     private val logPath: String = "src/main/kotlin/algorithms/logs/bgwo_${dataName}_logs.csv",
-    private val mutationRate: Double = 0.1,
-    private val minA: Double = 0.4,
-    private val maxSolutions: Int = 1000 // <-- Added parameter
+    private val mutationRate: Double = 0.02,
+    private val minA: Double = 0.4
 ) : Optimizer {
 
     private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
@@ -57,12 +56,9 @@ class GWO(
 
         var alphaMetrics = EvaluationMetrics(0.0, 0.0, 0.0, 0.0)
 
-        var totalSolutions = populationSize
-        var iter = 0
-        while (iter < maxIterations && totalSolutions < maxSolutions) { // <-- Use maxSolutions
+        repeat(maxIterations) { iter ->
             val results: List<FitnessResult> = wolves.map { fitnessFunction.evaluateDetailed(dataset, it) }
             val fitnesses = results.map { it.fitness }
-            totalSolutions += populationSize
 
             wolves.zip(results).forEach { (wolf, result) ->
                 val fitness = result.fitness
@@ -145,12 +141,9 @@ class GWO(
                             "$featuresSelected,${alpha.joinToString("")}\n"
                 )
             }
-            iter++
         }
 
         println("$name finished. Best fitness: ${"%.4f".format(alphaScore)}")
-        println("Iterations run: $iter")
-        println("Total solutions generated: $totalSolutions")
         return listOf(alpha).toDataFrame()
     }
 }
