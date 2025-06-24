@@ -17,7 +17,8 @@ class TLBO(
     private val logToCsv: Boolean = true,
     private val dataName: String = "Unnamed_Dataset",
     private val logPath: String = "src/main/kotlin/algorithms/logs/${dataName}_BTLBO_log.csv",
-    private val mutationRate: Double = 0.02
+    private val mutationRate: Double = 0.1,
+    private val maxSolutions: Int = 1000 // <-- Added parameter
 ) : Optimizer {
 
     private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
@@ -131,18 +132,25 @@ class TLBO(
 
         println("Starting $name with $populationSize learners and $maxIterations iterations.")
 
-        repeat(maxIterations) { iter ->
+        var totalSolutions = populationSize
+        var iter = 0
+        while (iter < maxIterations && totalSolutions < maxSolutions) { // <-- Use maxSolutions
             population = teacherPhase(population, fitnesses, numFeatures)
             results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
+            totalSolutions += populationSize
+            if (totalSolutions >= maxSolutions) break
 
             population = learnerPhase(population, fitnesses, numFeatures)
             results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
+            totalSolutions += populationSize
+            if (totalSolutions >= maxSolutions) break
 
             population = mutatePopulation(population, mutationRate)
             results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
             fitnesses = results.map { it.fitness }
+            totalSolutions += populationSize
 
             val currentBestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
             val currentBestFitness = fitnesses[currentBestIndex]
@@ -186,6 +194,7 @@ class TLBO(
                     )
                 )
             }
+            iter++
         }
 
         if (logToCsv) {
@@ -193,6 +202,8 @@ class TLBO(
         }
 
         println("$name finished. Best fitness: ${"%.4f".format(bestFitness)}")
+        println("Iterations run: $iter")
+        println("Total solutions generated: $totalSolutions")
         return listOf(bestSolution.map { if (it) 1 else 0 }).toDataFrame()
     }
 }

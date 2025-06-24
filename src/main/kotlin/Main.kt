@@ -12,9 +12,9 @@ import kotlin.random.Random
 
 fun main() {
     val dataLoaders = mapOf(
-        "BCW" to DataLoader.bcw(),
+//        "BCW" to DataLoader.bcw(),
         "Arrhythmia" to DataLoader.arrhythmia(),
-        "Semi-conductor" to DataLoader.semiConductor()
+//        "Semi-conductor" to DataLoader.semiConductor()
     )
 
     for ((name, loader) in dataLoaders) {
@@ -37,22 +37,20 @@ fun main() {
             println("\nRunning ${optimizer2.name} with ${optimizer2.populationSize} wolves for ${optimizer2.maxIterations} iterations...")
 
             val fitness = FitnessFunctionImplementation(labels.toDataFrame())
-            val result = optimizer2.optimize(features, fitness) // change optimizer here.
+            val result = optimizer.optimize(features, fitness) // change optimizer here.
 
             val bestMask = result[0].values().map { (it as Number).toInt() }
             val selectedCount = bestMask.count { it == 1 }
-            println("\nOptimization complete.")
-            println("Selected $selectedCount / ${bestMask.size} features.")
 
             var selectedColumns = features.columnNames()
                 .filterIndexed { index, _ -> bestMask.getOrNull(index) == 1 }
 
-            if (selectedColumns.isEmpty()) {
-                println("No features selected. Falling back to all features.")
-                selectedColumns = features.columnNames()
-            }
-
             println("Selected columns: $selectedColumns")
+
+            if (selectedColumns.isEmpty()) {
+                println("Warning: No features selected. Skipping model training and evaluation for $name.")
+                continue
+            }
 
             val selectedData = features.select(*selectedColumns.toTypedArray())
 
@@ -89,9 +87,6 @@ fun main() {
             println("Precision: ${"%.4f".format(evaluation.precision)}")
             println("Recall: ${"%.4f".format(evaluation.recall)}")
             println("F1 Score: ${"%.4f".format(evaluation.f1Score)}")
-
-            println("\nFinal Summary for $name:")
-            println("Selected Features: $selectedCount / ${features.columnNames().size}")
         }
 
         println("\n" + "-".repeat(60) + "\n")
