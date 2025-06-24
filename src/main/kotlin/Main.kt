@@ -5,6 +5,7 @@ import com.technosudo.algorithms.optimizers.GWO
 import com.technosudo.algorithms.optimizers.TLBO
 import com.technosudo.data.DataLoader
 import com.technosudo.evaluation.wrappers.RandomForestWrapper
+import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -13,17 +14,17 @@ import kotlin.random.Random
 fun main() {
     val dataLoaders = mapOf(
         "BCW" to DataLoader.bcw(),
-        "Arrhythmia" to DataLoader.arrhythmia(),
-        "Semi-conductor" to DataLoader.semiConductor()
-    )
-
-    val optimizers = listOf(
-        GWO(name = "Binary Grey Wolf Optimizer", dataName = "name", populationSize = 10, maxIterations = 30),
-        TLBO(name = "Teacher Learning Based Optimizer", dataName = "name", populationSize = 10, maxIterations = 30)
+//        "Arrhythmia" to DataLoader.arrhythmia(),
+//        "Semi-conductor" to DataLoader.semiConductor()
     )
 
     for ((name, loader) in dataLoaders) {
         println("Loading dataset: $name")
+
+        val optimizers = listOf(
+            GWO(name = "Binary Grey Wolf Optimizer", dataName = name, populationSize = 50, maxIterations = 100),
+//            TLBO(name = "Teacher Learning Based Optimizer", dataName = name, populationSize = 10, maxIterations = 30)
+        )
 
         for ((dataX, dataY) in loader) {
             println("Loaded $name")
@@ -52,27 +53,42 @@ fun main() {
 
             val fitness = FitnessFunctionImplementation(dataY.toDataFrame())
             for (optimizer in optimizers) {
-                // Run optimizer to get best feature mask
-                println("\nRunning ${optimizer.name} with ${optimizer.populationSize} wolves for ${optimizer.maxIterations} iterations...")
-                val result = optimizer.optimize(dataX, fitness)
+                // --- MODIFICATION START ---
+                // The logic for handling the optimizer result has been updated.
 
-                val bestMask = result[0].values().map { (it as Number).toInt() }
-                val selectedCount = bestMask.count { it == 1 }
+                println("\nRunning ${optimizer.name}...")
+
+                // 1. Run the optimizer. The result is now the final DataFrame with selected features.
+                // We will call it `selectedData` to make its purpose clear.
+                var selectedData = optimizer.optimize(dataX, fitness)
                 println("\nOptimization complete.")
-                println("Selected $selectedCount / ${bestMask.size} features.")
 
-                var selectedColumns = dataX.columnNames()
-                    .filterIndexed { index, _ -> bestMask.getOrNull(index) == 1 }
+                // 2. Get the names of the selected *feature* columns for logging.
+                // The optimizer returns features + the target column, so we drop the last column name
+                // (which is the target) to get a list of just the selected features.
+                var selectedFeatureColumns = selectedData.columnNames().dropLast(1)
 
-                if (selectedColumns.isEmpty()) {
-                    println("No features selected. Falling back to all features.")
-                    selectedColumns = dataX.columnNames()
+                // 3. Handle the case where the optimizer selects no features.
+                if (selectedFeatureColumns.isEmpty()) {
+                    println("Warning: No features were selected. Falling back to using all original features.")
+                    // If no features were selected, we revert to using the original full dataset.
+                    selectedData = dataX
+                    selectedFeatureColumns = dataX.columnNames().dropLast(1)
                 }
-                println("Selected columns: $selectedColumns")
 
-                val selectedData = dataX.select(*selectedColumns.toTypedArray())
+                val selectedCount = selectedFeatureColumns.size
+                // The total number of features is the column count of the original data minus the target column.
+                val totalFeatureCount = dataX.columnNames().size - 1
+
+                println("Selected $selectedCount / $totalFeatureCount features.")
+                println("Selected columns: $selectedFeatureColumns")
+
+                // 4. Create optimized train/test sets directly from `selectedData`.
+                // The old, redundant step of re-selecting data is no longer needed.
                 val trainXoptimized = trainIndexes.map { selectedData[it] }.toDataFrame()
                 val testXoptimized = testIndexes.map { selectedData[it] }.toDataFrame()
+
+                // --- MODIFICATION END ---
 
                 val rfOptimized = RandomForestWrapper()
                 rfOptimized.fit(trainXoptimized, trainY.toDataFrame())
@@ -93,11 +109,9 @@ fun main() {
                 println("F1 Score: ${"%.4f".format(evaluationOptimised.f1Score)}")
 
                 println("\nFinal Summary for $name:")
-                println("Selected Features: $selectedCount / ${dataX.columnNames().size}")
+                println("Selected Features: $selectedCount / $totalFeatureCount")
             }
-
         }
-
         println("\n" + "-".repeat(60) + "\n")
     }
 }

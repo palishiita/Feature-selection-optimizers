@@ -3,6 +3,7 @@ package com.technosudo.algorithms.optimizers
 import com.technosudo.algorithms.fitness.FitnessFunction
 import com.technosudo.algorithms.fitness.FitnessResult
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
 import java.util.Locale
@@ -19,7 +20,7 @@ class TLBO(
     private val logPath: String = "src/main/kotlin/algorithms/logs/${dataName}_BTLBO_log.csv",
     private val mutationRate: Double = 0.015,
     // The primary stopping condition is now the budget of total solutions to evaluate.
-    private val maxSolutions: Int = 1000
+    private val maxSolutions: Int = 500
 ) : Optimizer {
 
     private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
@@ -137,7 +138,6 @@ class TLBO(
      */
     override fun optimize(dataset: DataFrame<*>, fitnessFunction: FitnessFunction): DataFrame<*> {
         val numFeatures = dataset.columnNames().size - 1
-
         var population = List(populationSize) {
             BooleanArray(numFeatures) { Random.nextBoolean() }
         }
@@ -228,6 +228,27 @@ class TLBO(
         println("$name finished. Best fitness: ${"%.4f".format(fitnesses[finalBestIndex])}")
         println("Iterations run: $iter")
         println("Total solutions evaluated (actual): $totalEvaluations")
-        return listOf(finalBestSolution.map { if (it) 1 else 0 }).toDataFrame()
+        println("PRUNE FINAL SOLUTION ${finalBestSolution.joinToString { if (it) "1" else "0" }}")
+
+        // Get all column names from the original dataset.
+        val allColumnNames = dataset.columnNames()
+        // The feature names are all columns except the last one (assumed to be the target).
+        val featureNames = allColumnNames.dropLast(1)
+        // The target column name is the last column.
+        val targetColumnName = allColumnNames.last()
+
+        // Filter the feature names based on the finalBestSolution mask.
+        // A feature name is kept if its corresponding value in the mask is 'true'.
+        val selectedFeatureNames = featureNames.filterIndexed { index, _ ->
+            finalBestSolution[index]
+        }
+
+        // The final list of columns for the new DataFrame includes the selected features and the target column.
+        val columnsToReturn = selectedFeatureNames + targetColumnName
+
+        println("Returning a DataFrame with ${columnsToReturn.size} selected columns: $columnsToReturn")
+
+        // Use the `select` function to create a new DataFrame with only the desired columns.
+        return dataset.select(*columnsToReturn.toTypedArray())
     }
 }
