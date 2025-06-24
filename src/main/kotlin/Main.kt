@@ -32,12 +32,12 @@ fun main() {
 
             // Run optimizer to get best feature mask
             val optimizer = GWO(name = "Binary Grey Wolf Optimizer", dataName = name, populationSize = 10, maxIterations = 30)
-            val optimizer2 = TLBO(name = "Teacher Learning Based Optimizer", dataName = name, populationSize = 50, maxIterations = 100)
+            val optimizer2 = TLBO(name = "Teacher Learning Based Optimizer", dataName = name, populationSize = 50, maxIterations = 100, maxSolutions = 1000)
             println("\nRunning ${optimizer.name} with ${optimizer.populationSize} wolves for ${optimizer.maxIterations} iterations...")
             println("\nRunning ${optimizer2.name} with ${optimizer2.populationSize} wolves for ${optimizer2.maxIterations} iterations...")
 
             val fitness = FitnessFunctionImplementation(labels.toDataFrame())
-            val result = optimizer2.optimize(features, fitness) // change optimizer here.
+            val result = optimizer.optimize(features, fitness) // change optimizer here.
 
             val bestMask = result[0].values().map { (it as Number).toInt() }
             val selectedCount = bestMask.count { it == 1 }
