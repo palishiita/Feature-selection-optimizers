@@ -2,7 +2,6 @@ package com.technosudo.algorithms.optimizers
 
 import com.technosudo.algorithms.fitness.FitnessFunction
 import com.technosudo.algorithms.fitness.FitnessResult
-import kotlinx.coroutines.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
@@ -11,14 +10,16 @@ import kotlin.math.exp
 import kotlin.random.Random
 
 class TLBO(
-    override val populationSize: Int = 10,
-    override val maxIterations: Int = 30,
+    override val populationSize: Int = 50,
+    // maxIterations is now a failsafe, not the primary stopping condition.
+    override val maxIterations: Int = 10,
     override val name: String = "Binary Teaching Learning Based Optimizer",
     private val logToCsv: Boolean = true,
     private val dataName: String = "Unnamed_Dataset",
     private val logPath: String = "src/main/kotlin/algorithms/logs/${dataName}_BTLBO_log.csv",
-    private val mutationRate: Double = 0.1,
-    private val maxSolutions: Int = 1000 // <-- Added parameter
+    private val mutationRate: Double = 0.015,
+    // The primary stopping condition is now the budget of total solutions to evaluate.
+    private val maxSolutions: Int = 1000
 ) : Optimizer {
 
     private fun sigmoid(x: Double): Double = 1.0 / (1.0 + exp(-x))
@@ -28,8 +29,10 @@ class TLBO(
     private fun teacherPhase(
         population: List<BooleanArray>,
         fitnesses: List<Double>,
-        numFeatures: Int
-    ): List<BooleanArray> {
+        dataset: DataFrame<*>,
+        fitnessFunction: FitnessFunction
+    ): Pair<List<BooleanArray>, List<Double>> {
+        val numFeatures = population.first().size
         val teacherIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
         val teacher = population[teacherIndex]
 
@@ -37,90 +40,112 @@ class TLBO(
             population.sumOf { if (it[j]) 1.0 else 0.0 } / population.size
         }
 
-        return population.map { learner ->
-            BooleanArray(numFeatures) { i ->
-                val TF = if (Random.nextDouble() < 0.5) 1 else 2
-                val diff = (if (teacher[i]) 1.0 else 0.0) - TF * meanFeatures[i]
+        val newPopulation = population.toMutableList()
+        val newFitnesses = fitnesses.toMutableList()
+
+        for (i in population.indices) {
+            val originalLearner = population[i]
+            val candidateLearner = BooleanArray(numFeatures) { j ->
+                val tf = Random.nextInt(1, 3)
+                val diff = (if (teacher[j]) 1.0 else 0.0) - tf * meanFeatures[j]
                 val prob = sigmoid(diff)
                 transfer(prob) == 1
             }
+
+            val candidateFitness = fitnessFunction.evaluate(dataset, candidateLearner.map { if (it) 1 else 0 })
+            if (candidateFitness > newFitnesses[i]) {
+                newPopulation[i] = candidateLearner
+                newFitnesses[i] = candidateFitness
+            }
         }
+        return newPopulation to newFitnesses
     }
 
     private fun learnerPhase(
         population: List<BooleanArray>,
         fitnesses: List<Double>,
-        numFeatures: Int
-    ): List<BooleanArray> {
+        dataset: DataFrame<*>,
+        fitnessFunction: FitnessFunction
+    ): Pair<List<BooleanArray>, List<Double>> {
+        val numFeatures = population.first().size
         val newPopulation = population.toMutableList()
+        val newFitnesses = fitnesses.toMutableList()
 
         for (i in population.indices) {
-            val learner = population[i]
-            var peerIndex: Int
-            do {
-                peerIndex = Random.nextInt(population.size)
-            } while (peerIndex == i)
-
+            val peerIndex = (0 until population.size).filter { it != i }.random()
+            val originalLearner = population[i]
             val peer = population[peerIndex]
-            val learnerFitness = fitnesses[i]
+            val originalFitness = fitnesses[i]
             val peerFitness = fitnesses[peerIndex]
 
-            val newLearner = BooleanArray(numFeatures) { j ->
-                val diff = if (peerFitness > learnerFitness)
-                    (if (peer[j]) 1 else 0) - (if (learner[j]) 1 else 0)
-                else
-                    (if (learner[j]) 1 else 0) - (if (peer[j]) 1 else 0)
-
-                val prob = sigmoid(diff.toDouble())
-                transfer(prob) == 1
+            val (source, target) = if (peerFitness > originalFitness) {
+                peer to originalLearner
+            } else {
+                originalLearner to peer
             }
 
-            if (!learner.contentEquals(newLearner)) {
-                newPopulation[i] = newLearner
+            val candidateLearner = BooleanArray(numFeatures) { j ->
+                val diff = (if (source[j]) 1.0 else 0.0) - (if (target[j]) 1.0 else 0.0)
+                val prob = sigmoid(diff)
+                (transfer(prob) == 1) xor originalLearner[j]
+            }
+
+            val candidateFitness = fitnessFunction.evaluate(dataset, candidateLearner.map { if (it) 1 else 0 })
+            if (candidateFitness > newFitnesses[i]) {
+                newPopulation[i] = candidateLearner
+                newFitnesses[i] = candidateFitness
             }
         }
-        return newPopulation
+        return newPopulation to newFitnesses
     }
 
-    private fun mutatePopulation(
+    /**
+     * MODIFIED: This function now returns a Triple, with the third element being the
+     * exact number of fitness evaluations performed during the mutation phase.
+     */
+    private fun mutateAndSelect(
         population: List<BooleanArray>,
-        mutationRate: Double
-    ): List<BooleanArray> {
-        return population.map { individual ->
-            BooleanArray(individual.size) { i ->
-                if (Random.nextDouble() < mutationRate) !individual[i] else individual[i]
-            }
-        }
-    }
-
-    private suspend fun evaluatePopulationParallel(
+        fitnesses: List<Double>,
+        mutationRate: Double,
         dataset: DataFrame<*>,
-        population: List<BooleanArray>,
         fitnessFunction: FitnessFunction
-    ): List<FitnessResult> = coroutineScope {
-        population.map { mask ->
-            async(Dispatchers.Default) {
-                fitnessFunction.evaluateDetailed(dataset, mask.toList().map { if (it) 1 else 0 })
+    ): Triple<List<BooleanArray>, List<Double>, Int> {
+        val newPopulation = population.toMutableList()
+        val newFitnesses = fitnesses.toMutableList()
+        var evaluations = 0
+
+        for (i in population.indices) {
+            if (Random.nextDouble() < mutationRate) {
+                val candidate = population[i].clone()
+                val mutationPoint = Random.nextInt(candidate.size)
+                candidate[mutationPoint] = !candidate[mutationPoint] // Flip a random bit
+
+                val candidateFitness = fitnessFunction.evaluate(dataset, candidate.map { if (it) 1 else 0 })
+                evaluations++ // Increment the counter for each evaluation
+                if (candidateFitness > newFitnesses[i]) {
+                    newPopulation[i] = candidate
+                    newFitnesses[i] = candidateFitness
+                }
             }
-        }.awaitAll()
+        }
+        return Triple(newPopulation, newFitnesses, evaluations)
     }
 
+    /**
+     * MODIFIED: The main optimization loop now runs until the `maxSolutions` budget is
+     * exhausted. The `maxIterations` parameter is only used as a failsafe.
+     */
     override fun optimize(dataset: DataFrame<*>, fitnessFunction: FitnessFunction): DataFrame<*> {
-        val numFeatures = dataset.columnNames().size
+        val numFeatures = dataset.columnNames().size - 1
 
         var population = List(populationSize) {
             BooleanArray(numFeatures) { Random.nextBoolean() }
         }
 
-        var results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
-        var fitnesses = results.map { it.fitness }
+        var fitnessResults = population.map { fitnessFunction.evaluateDetailed(dataset, it.map { b -> if (b) 1 else 0 }) }
+        var fitnesses = fitnessResults.map { it.fitness }
+        var totalEvaluations = populationSize
 
-        var bestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
-        var bestSolution = population[bestIndex]
-        var bestFitness = fitnesses[bestIndex]
-        var bestMetrics = results[bestIndex].metrics
-
-        val logBuffer = StringBuilder()
         if (logToCsv) {
             File(logPath).printWriter().use { out ->
                 out.println(
@@ -129,81 +154,80 @@ class TLBO(
                 )
             }
         }
+        // Updated startup message
+        println("Starting $name with a budget of $maxSolutions evaluations (Population: $populationSize).")
 
-        println("Starting $name with $populationSize learners and $maxIterations iterations.")
-
-        var totalSolutions = populationSize
         var iter = 0
-        while (iter < maxIterations && totalSolutions < maxSolutions) { // <-- Use maxSolutions
-            population = teacherPhase(population, fitnesses, numFeatures)
-            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
-            fitnesses = results.map { it.fitness }
-            totalSolutions += populationSize
-            if (totalSolutions >= maxSolutions) break
+        // Loop until the evaluation budget is met
+        while (totalEvaluations < maxSolutions) {
 
-            population = learnerPhase(population, fitnesses, numFeatures)
-            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
-            fitnesses = results.map { it.fitness }
-            totalSolutions += populationSize
-            if (totalSolutions >= maxSolutions) break
+            // --- Teacher Phase ---
+            val (popAfterTeacher, fitAfterTeacher) = teacherPhase(population, fitnesses, dataset, fitnessFunction)
+            population = popAfterTeacher
+            fitnesses = fitAfterTeacher
+            totalEvaluations += populationSize
+            if (totalEvaluations >= maxSolutions) break // Exit if budget is met
 
-            population = mutatePopulation(population, mutationRate)
-            results = runBlocking { evaluatePopulationParallel(dataset, population, fitnessFunction) }
-            fitnesses = results.map { it.fitness }
-            totalSolutions += populationSize
+            // --- Learner Phase ---
+            val (popAfterLearner, fitAfterLearner) = learnerPhase(population, fitnesses, dataset, fitnessFunction)
+            population = popAfterLearner
+            fitnesses = fitAfterLearner
+            totalEvaluations += populationSize
+            if (totalEvaluations >= maxSolutions) break // Exit if budget is met
 
-            val currentBestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] } ?: 0
-            val currentBestFitness = fitnesses[currentBestIndex]
-            if (currentBestFitness > bestFitness) {
-                bestFitness = currentBestFitness
-                bestSolution = population[currentBestIndex]
-                bestMetrics = results[currentBestIndex].metrics
-            }
+            // --- Mutation Phase ---
+            val (popAfterMutation, fitAfterMutation, mutationEvals) = mutateAndSelect(population, fitnesses, mutationRate, dataset, fitnessFunction)
+            population = popAfterMutation
+            fitnesses = fitAfterMutation
+            totalEvaluations += mutationEvals // Use the exact count from the function
+            if (totalEvaluations >= maxSolutions) break // Exit if budget is met
+
+            // --- Update and Log ---
+            val bestCurrentIndex = fitnesses.indices.maxByOrNull { fitnesses[it] }!!
+            val bestResult = fitnessFunction.evaluateDetailed(dataset, population[bestCurrentIndex].map { if (it) 1 else 0 })
+
+            val bestFitness = bestResult.fitness
+            val bestMetrics = bestResult.metrics
+            val bestSolution = population[bestCurrentIndex]
 
             val maxFitnessIter = fitnesses.maxOrNull() ?: Double.NaN
             val minFitnessIter = fitnesses.minOrNull() ?: Double.NaN
             val avgFitnessIter = fitnesses.average()
             val featuresSelected = bestSolution.count { it }
 
+            // Updated logging message to show evaluation progress
             println(
-                "Iteration ${iter + 1}/$maxIterations: Best Fitness = ${"%.4f".format(Locale.US, bestFitness)}, " +
-                        "Max = ${"%.4f".format(Locale.US, maxFitnessIter)}, Min = ${"%.4f".format(Locale.US, minFitnessIter)}, " +
-                        "Avg = ${"%.4f".format(Locale.US, avgFitnessIter)}, " +
-                        "Acc = ${"%.4f".format(Locale.US, bestMetrics.accuracy)}, " +
-                        "Prec = ${"%.4f".format(Locale.US, bestMetrics.precision)}, " +
-                        "Rec = ${"%.4f".format(Locale.US, bestMetrics.recall)}, " +
-                        "F1 = ${"%.4f".format(Locale.US, bestMetrics.f1Score)}, Features Selected = $featuresSelected"
+                "Iteration ${iter + 1}: Best Fitness = ${"%.4f".format(bestFitness)}, " +
+                        "Acc = ${"%.4f".format(bestMetrics.accuracy)}, Features = $featuresSelected, " +
+                        "Evals = $totalEvaluations/$maxSolutions"
             )
 
             if (logToCsv) {
-                logBuffer.append(
+                File(logPath).appendText(
                     String.format(
                         Locale.US,
                         "%d,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%d,%s\n",
-                        iter + 1,
-                        bestFitness,
-                        maxFitnessIter,
-                        minFitnessIter,
-                        avgFitnessIter,
-                        bestMetrics.accuracy,
-                        bestMetrics.precision,
-                        bestMetrics.recall,
-                        bestMetrics.f1Score,
-                        featuresSelected,
-                        bestSolution.joinToString("") { if (it) "1" else "0" }
+                        iter + 1, bestFitness, maxFitnessIter, minFitnessIter, avgFitnessIter,
+                        bestMetrics.accuracy, bestMetrics.precision, bestMetrics.recall, bestMetrics.f1Score,
+                        featuresSelected, bestSolution.joinToString("") { if (it) "1" else "0" }
                     )
                 )
             }
             iter++
+
+            // Failsafe to prevent potential infinite loops
+            if (iter >= maxIterations) {
+                println("Warning: Exiting due to reaching the failsafe iteration limit ($maxIterations).")
+                break
+            }
         }
 
-        if (logToCsv) {
-            File(logPath).appendText(logBuffer.toString())
-        }
+        val finalBestIndex = fitnesses.indices.maxByOrNull { fitnesses[it] }!!
+        val finalBestSolution = population[finalBestIndex]
 
-        println("$name finished. Best fitness: ${"%.4f".format(bestFitness)}")
+        println("$name finished. Best fitness: ${"%.4f".format(fitnesses[finalBestIndex])}")
         println("Iterations run: $iter")
-        println("Total solutions generated: $totalSolutions")
-        return listOf(bestSolution.map { if (it) 1 else 0 }).toDataFrame()
+        println("Total solutions evaluated (actual): $totalEvaluations")
+        return listOf(finalBestSolution.map { if (it) 1 else 0 }).toDataFrame()
     }
 }
