@@ -13,13 +13,13 @@ import kotlin.random.Random
 fun main() {
     val dataLoaders = mapOf(
         "BCW" to DataLoader.bcw(),
-        "Arrhythmia" to DataLoader.arrhythmia(),
-        "Semi-conductor" to DataLoader.semiConductor()
+        //"Arrhythmia" to DataLoader.arrhythmia(),
+        //"Semi-conductor" to DataLoader.semiConductor()
     )
 
     val optimizers = listOf(
-        GWO(name = "Binary Grey Wolf Optimizer", dataName = "name", populationSize = 10, maxIterations = 30),
-        TLBO(name = "Teacher Learning Based Optimizer", dataName = "name", populationSize = 10, maxIterations = 30)
+        GWO(name = "Binary Grey Wolf Optimizer", dataName = "name", populationSize = 3, maxIterations = 3),
+        //TLBO(name = "Teacher Learning Based Optimizer", dataName = "name", populationSize = 10, maxIterations = 30)
     )
 
     for ((name, loader) in dataLoaders) {

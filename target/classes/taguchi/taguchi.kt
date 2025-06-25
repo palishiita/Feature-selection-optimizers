@@ -44,7 +44,6 @@ object TaguchiExperiment {
                     val selectedColumns = features.columnNames()
                         .filterIndexed { index, _ -> bestMask.getOrNull(index) == 1 }
                     println("Selected columns: $selectedColumns")
-                    // You can add model training and evaluation here as in Main.kt
                 }
             }
         }
