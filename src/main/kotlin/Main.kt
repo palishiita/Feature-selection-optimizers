@@ -2,43 +2,25 @@ package com.technosudo
 
 import com.technosudo.algorithms.fitness.FitnessFunctionImplementation
 import com.technosudo.algorithms.optimizers.GWO
-//import com.technosudo.algorithms.optimizers.TLBO
+import com.technosudo.algorithms.optimizers.TLBO
 import com.technosudo.data.DataLoader
 import com.technosudo.evaluation.wrappers.RandomForestWrapper
 import com.technosudo.taguchi.TaguchiExperiment
-//import org.jetbrains.kotlinx.dataframe.api.columnNames
-//import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.*
 import kotlin.random.Random
 
 fun main() {
     val dataLoaders = mapOf(
-        "BCW" to DataLoader.bcw(),
+        "BCW" to DataLoader.bcw()
 //        "Arrhythmia" to DataLoader.arrhythmia(),
 //        "Semi-conductor" to DataLoader.semiConductor()
     )
 
-    // loading taguchi experiment
-    //val taguchi = TaguchiExperiment()
-
     for ((name, loader) in dataLoaders) {
         println("Loading dataset: $name")
 
-        val optimizers = listOf(
-            GWO(name = "Binary Grey Wolf Optimizer", dataName = name, populationSize = 50, maxIterations = 100),
-//            TLBO(name = "Teacher Learning Based Optimizer", dataName = name, populationSize = 10, maxIterations = 30)
-        )
-
         for ((dataX, dataY) in loader) {
-            println("Loaded $name")
             println("-> Feature rows: ${dataX.rowsCount()} | columns: ${dataX.columnNames().size}")
-            println("-> Labels: ${dataY.size()} entries")
-            println("-> Label sample: ${dataY.values().take(5)}")
-            println("-> Label distribution: ${dataY.values().groupingBy { it }.eachCount()}")
-            println("-> All feature columns: ${dataX.columnNames()}")
-            println("-> Sample feature rows:")
-            println(dataX.take(3).toString())
 
             val rowCount = dataX.rowsCount()
             val indexes = (0 until rowCount).shuffled(Random(42))
@@ -51,71 +33,82 @@ fun main() {
             val testX = testIndexes.map { dataX[it] }.toDataFrame()
             val testY = testIndexes.map { dataY[it] }
 
+            val taguchi = TaguchiExperiment()
+
             val rfBase = RandomForestWrapper()
             rfBase.fit(trainX, trainY.toDataFrame())
-            val evaluationBase = rfBase.evaluate(testX, testY.toDataFrame())
+            val baselineEval = rfBase.evaluate(testX, testY.toDataFrame())
+            taguchi.recordBaseline(name, baselineEval.accuracy)
 
-            val fitness = FitnessFunctionImplementation(dataY.toDataFrame())
-            for (optimizer in optimizers) {
-                // --- MODIFICATION START ---
-                // The logic for handling the optimizer result has been updated.
+            println("\nBaseline: Acc=${"%.4f".format(baselineEval.accuracy)}, " +
+                    "Prec=${"%.4f".format(baselineEval.precision)}, " +
+                    "Rec=${"%.4f".format(baselineEval.recall)}, " +
+                    "F1=${"%.4f".format(baselineEval.f1Score)}")
 
-                println("\nRunning ${optimizer.name}...")
+            val fitnessFunction = FitnessFunctionImplementation(dataY.toDataFrame())
+            val configurations = taguchi.generateConfigurations()
 
-                // 1. Run the optimizer. The result is now the final DataFrame with selected features.
-                // We will call it `selectedData` to make its purpose clear.
-                var selectedData = optimizer.optimize(dataX, fitness)
-                println("\nOptimization complete.")
+            val maxIter = 150
+            val maxSolutions = 1500
 
-                // 2. Get the names of the selected *feature* columns for logging.
-                // The optimizer returns features + the target column, so we drop the last column name
-                // (which is the target) to get a list of just the selected features.
+            for (config in configurations) {
+                val popSize = config.parameters["populationSize"] as Int
+                val mutationRate = config.parameters["mutationRate"] as Double
+
+                println("\nRunning Config ${config.experimentId} → populationSize=$popSize, mutationRate=$mutationRate")
+
+                val optimizer = GWO(
+                    name = "GWO-Taguchi",
+                    dataName = name,
+                    populationSize = popSize,
+                    maxIterations = maxIter,
+                    mutationRate = mutationRate,
+                    maxSolutions = maxSolutions
+                )
+
+                val startTime = System.currentTimeMillis()
+                var selectedData = optimizer.optimize(dataX, fitnessFunction)
+                val endTime = System.currentTimeMillis()
+                val runtime = endTime - startTime
+
                 var selectedFeatureColumns = selectedData.columnNames().dropLast(1)
-
-                // 3. Handle the case where the optimizer selects no features.
                 if (selectedFeatureColumns.isEmpty()) {
-                    println("Warning: No features were selected. Falling back to using all original features.")
-                    // If no features were selected, we revert to using the original full dataset.
                     selectedData = dataX
                     selectedFeatureColumns = dataX.columnNames().dropLast(1)
                 }
 
-                val selectedCount = selectedFeatureColumns.size
-                // The total number of features is the column count of the original data minus the target column.
-                val totalFeatureCount = dataX.columnNames().size - 1
+                val trainXopt = trainIndexes.map { selectedData[it] }.toDataFrame()
+                val testXopt = testIndexes.map { selectedData[it] }.toDataFrame()
 
-                println("Selected $selectedCount / $totalFeatureCount features.")
-                println("Selected columns: $selectedFeatureColumns")
+                val rfOpt = RandomForestWrapper()
+                rfOpt.fit(trainXopt, trainY.toDataFrame())
+                val optEval = rfOpt.evaluate(testXopt, testY.toDataFrame())
 
-                // 4. Create optimized train/test sets directly from `selectedData`.
-                // The old, redundant step of re-selecting data is no longer needed.
-                val trainXoptimized = trainIndexes.map { selectedData[it] }.toDataFrame()
-                val testXoptimized = testIndexes.map { selectedData[it] }.toDataFrame()
+                taguchi.recordResult(
+                    config = config,
+                    fitness = optEval.accuracy,
+                    accuracy = optEval.accuracy,
+                    precision = optEval.precision,
+                    recall = optEval.recall,
+                    f1Score = optEval.f1Score,
+                    featuresSelected = selectedFeatureColumns.size,
+                    totalFeatures = dataX.columnNames().size - 1,
+                    baselineAccuracy = baselineEval.accuracy,
+                    selectedFeatureMask = selectedFeatureColumns.map { dataX.columnNames().indexOf(it) },
+                    runtime = runtime
+                )
 
-                // --- MODIFICATION END ---
-
-                val rfOptimized = RandomForestWrapper()
-                rfOptimized.fit(trainXoptimized, trainY.toDataFrame())
-                println("Model trained successfully for $name.")
-
-                // Evaluate
-                val evaluationOptimised = rfOptimized.evaluate(testXoptimized, testY.toDataFrame())
-                println("\nEvaluation Metrics Base:")
-                println("Accuracy: ${"%.4f".format(evaluationBase.accuracy)}")
-                println("Precision: ${"%.4f".format(evaluationBase.precision)}")
-                println("Recall: ${"%.4f".format(evaluationBase.recall)}")
-                println("F1 Score: ${"%.4f".format(evaluationBase.f1Score)}")
-
-                println("\nEvaluation Metrics Optimized:")
-                println("Accuracy: ${"%.4f".format(evaluationOptimised.accuracy)}")
-                println("Precision: ${"%.4f".format(evaluationOptimised.precision)}")
-                println("Recall: ${"%.4f".format(evaluationOptimised.recall)}")
-                println("F1 Score: ${"%.4f".format(evaluationOptimised.f1Score)}")
-
-                println("\nFinal Summary for $name:")
-                println("Selected Features: $selectedCount / $totalFeatureCount")
+                println("→ Config ${config.experimentId} | Acc=${"%.4f".format(optEval.accuracy)}, " +
+                        "Prec=${"%.4f".format(optEval.precision)}, " +
+                        "Rec=${"%.4f".format(optEval.recall)}, F1=${"%.4f".format(optEval.f1Score)}")
             }
+
+            val optimalConfig = taguchi.analyzeAndFindOptimal()
+            println("\nOptimal configuration: $optimalConfig")
+
+            taguchi.exportToCSV()
+            println(taguchi.getSummary())
         }
-        println("\n" + "-".repeat(60) + "\n")
+        println("\n" + "=".repeat(60) + "\n")
     }
 }

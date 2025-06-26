@@ -114,11 +114,11 @@ The fitness function is used every time a new candidate solution (binary vector)
 
 The following datasets are chosen to represent a range of dimensional complexities:
 
-| Dataset                                                                 | Dimensionality | Features | Classes |
-|-------------------------------------------------------------------------|----------------|----------|---------|
+| Dataset                                                                                              | Dimensionality | Features | Classes |
+|------------------------------------------------------------------------------------------------------|----------------|----------|---------|
 | [Breast Cancer Wisconsin](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic) | Low            | 30       | 2       |
-| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia)         | Medium         | 279      | 16      |
-| [Arcene](https://archive.ics.uci.edu/dataset/19/arcene)                | High           | 10,000   | 2       |
+| [Arrhythmia](https://archive.ics.uci.edu/dataset/5/arrhythmia)                                       | Medium         | 279      | 16      |
+| [Arcene](https://archive.ics.uci.edu/dataset/167/arcene)                                              | High           | 10,000   | 2       |
 
 ---
 

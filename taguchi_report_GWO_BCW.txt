@@ -1,0 +1,319 @@
+TAGUCHI ANALYSIS REPORT
+============================================================
+Generated: 2025-06-26T19:37:24.540782600
+Total Experiments: 9
+
+PARAMETER ANALYSIS (S/N Ratio):
+------------------------------------------------------------
+
+Parameter: populationSize
+Level	S/N Ratio	Mean Fitness	Count
+75	-0.051		0.994		3
+100	-0.077		0.991		3
+50	-0.103		0.988		3
+★ Best: 75 (S/N: -0.051)
+
+Parameter: mutationRate
+Level	S/N Ratio	Mean Fitness	Count
+0.07	-0.051		0.994		3
+0.03	-0.077		0.991		3
+0.05	-0.102		0.988		3
+★ Best: 0.07 (S/N: -0.051)
+
+============================================================
+DETAILED RESULTS:
+Config	Fitness	Accuracy	Precision	Recall	F1	Selected	Reduction%	Improvement	Efficiency	Runtime(ms)
+1	0.9825	0.9825	0.9810	0.9810	0.9810	10/29	65.5	0.0088	0.098246	86182
+2	0.9825	0.9825	0.9867	0.9756	0.9807	11/29	62.1	0.0088	0.089314	75781
+3	1.0000	1.0000	1.0000	1.0000	1.0000	11/29	62.1	0.0263	0.090909	81084
+4	1.0000	1.0000	1.0000	1.0000	1.0000	10/29	65.5	0.0263	0.100000	81245
+5	0.9912	0.9912	0.9932	0.9878	0.9904	7/29	75.9	0.0175	0.141604	82982
+6	0.9912	0.9912	0.9932	0.9878	0.9904	8/29	72.4	0.0175	0.123904	89193
+7	0.9912	0.9912	0.9932	0.9878	0.9904	10/29	65.5	0.0175	0.099123	93047
+8	0.9912	0.9912	0.9932	0.9878	0.9904	9/29	69.0	0.0175	0.110136	91137
+9	0.9912	0.9912	0.9932	0.9878	0.9904	9/29	69.0	0.0175	0.110136	94816
+
+============================================================
+SUMMARY:
+Best Accuracy: 1.0000
+Average Accuracy: 0.9912
+
+
+
+"C:\Program Files\Java\jdk-24\bin\java.exe" -Xmx4g "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3.5\lib\idea_rt.jar=51731" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\ishii\Documents\Feature-selection-optimizers\target\classes;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe\1.0.0-Beta1\dataframe-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-core\1.0.0-Beta1\dataframe-core-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlin\kotlin-reflect\2.0.20\kotlin-reflect-2.0.20.jar;C:\Users\ishii\.m2\repository\org\apache\commons\commons-csv\1.12.0\commons-csv-1.12.0.jar;C:\Users\ishii\.m2\repository\commons-codec\commons-codec\1.17.1\commons-codec-1.17.1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\kotlinx-datetime-jvm\0.6.1\kotlinx-datetime-jvm-0.6.1.jar;C:\Users\ishii\.m2\repository\commons-io\commons-io\2.18.0\commons-io-2.18.0.jar;C:\Users\ishii\.m2\repository\ch\randelshofer\fastdoubleparser\2.0.1\fastdoubleparser-2.0.1.jar;C:\Users\ishii\.m2\repository\com\squareup\kotlinpoet-jvm\1.18.1\kotlinpoet-jvm-1.18.1.jar;C:\Users\ishii\.m2\repository\io\github\oshai\kotlin-logging-jvm\7.0.3\kotlin-logging-jvm-7.0.3.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-arrow\1.0.0-Beta1\dataframe-arrow-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\apache\arrow\arrow-vector\18.1.0\arrow-vector-18.1.0.jar;C:\Users\ishii\.m2\repository\org\apache\arrow\arrow-memory-core\18.1.0\arrow-memory-core-18.1.0.jar;C:\Users\ishii\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.0\jackson-core-2.18.0.jar;C:\Users\ishii\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.0\jackson-annotations-2.18.0.jar;C:\Users\ishii\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.0\jackson-databind-2.18.0.jar;C:\Users\ishii\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.0\jackson-datatype-jsr310-2.18.0.jar;C:\Users\ishii\.m2\repository\com\google\flatbuffers\flatbuffers-java\24.3.25\flatbuffers-java-24.3.25.jar;C:\Users\ishii\.m2\repository\org\apache\arrow\arrow-format\18.1.0\arrow-format-18.1.0.jar;C:\Users\ishii\.m2\repository\org\apache\arrow\arrow-memory-unsafe\18.1.0\arrow-memory-unsafe-18.1.0.jar;C:\Users\ishii\.m2\repository\org\apache\commons\commons-compress\1.27.1\commons-compress-1.27.1.jar;C:\Users\ishii\.m2\repository\org\apache\commons\commons-lang3\3.16.0\commons-lang3-3.16.0.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-excel\1.0.0-Beta1\dataframe-excel-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\apache\poi\poi\5.3.0\poi-5.3.0.jar;C:\Users\ishii\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\ishii\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\ishii\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\ishii\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\ishii\.m2\repository\org\apache\poi\poi-ooxml\5.3.0\poi-ooxml-5.3.0.jar;C:\Users\ishii\.m2\repository\org\apache\poi\poi-ooxml-lite\5.3.0\poi-ooxml-lite-5.3.0.jar;C:\Users\ishii\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.1\xmlbeans-5.2.1.jar;C:\Users\ishii\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-jdbc\1.0.0-Beta1\dataframe-jdbc-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\mariadb\jdbc\mariadb-java-client\3.5.1\mariadb-java-client-3.5.1.jar;C:\Users\ishii\.m2\repository\com\github\waffle\waffle-jna\3.3.0\waffle-jna-3.3.0.jar;C:\Users\ishii\.m2\repository\net\java\dev\jna\jna\5.13.0\jna-5.13.0.jar;C:\Users\ishii\.m2\repository\net\java\dev\jna\jna-platform\5.13.0\jna-platform-5.13.0.jar;C:\Users\ishii\.m2\repository\org\slf4j\jcl-over-slf4j\2.0.7\jcl-over-slf4j-2.0.7.jar;C:\Users\ishii\.m2\repository\com\github\ben-manes\caffeine\caffeine\2.9.3\caffeine-2.9.3.jar;C:\Users\ishii\.m2\repository\com\google\errorprone\error_prone_annotations\2.10.0\error_prone_annotations-2.10.0.jar;C:\Users\ishii\.m2\repository\org\checkerframework\checker-qual\3.32.0\checker-qual-3.32.0.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-csv\1.0.0-Beta1\dataframe-csv-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\io\deephaven\deephaven-csv\0.15.0\deephaven-csv-0.15.0.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\dataframe-json\1.0.0-Beta1\dataframe-json-1.0.0-Beta1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-core-jvm\1.7.1\kotlinx-serialization-core-jvm-1.7.1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\2.0.0\kotlin-stdlib-common-2.0.0.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-json-jvm\1.7.1\kotlinx-serialization-json-jvm-1.7.1.jar;C:\Users\ishii\.m2\repository\com\github\haifengl\smile-kotlin\4.3.0\smile-kotlin-4.3.0.jar;C:\Users\ishii\.m2\repository\com\github\haifengl\smile-core\4.3.0\smile-core-4.3.0.jar;C:\Users\ishii\.m2\repository\com\github\haifengl\smile-base\4.3.0\smile-base-4.3.0.jar;C:\Users\ishii\.m2\repository\org\bytedeco\javacpp\1.5.11\javacpp-1.5.11-linux-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\javacpp\1.5.11\javacpp-1.5.11-windows-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\javacpp\1.5.11\javacpp-1.5.11-macosx-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\javacpp\1.5.11\javacpp-1.5.11-macosx-arm64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\openblas\0.3.28-1.5.11\openblas-0.3.28-1.5.11-linux-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\javacpp\1.5.11\javacpp-1.5.11.jar;C:\Users\ishii\.m2\repository\org\bytedeco\openblas\0.3.28-1.5.11\openblas-0.3.28-1.5.11-windows-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\openblas\0.3.28-1.5.11\openblas-0.3.28-1.5.11-macosx-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\openblas\0.3.28-1.5.11\openblas-0.3.28-1.5.11-macosx-arm64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\arpack-ng\3.9.1-1.5.11\arpack-ng-3.9.1-1.5.11.jar;C:\Users\ishii\.m2\repository\org\bytedeco\openblas\0.3.28-1.5.11\openblas-0.3.28-1.5.11.jar;C:\Users\ishii\.m2\repository\org\bytedeco\arpack-ng\3.9.1-1.5.11\arpack-ng-3.9.1-1.5.11-linux-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\arpack-ng\3.9.1-1.5.11\arpack-ng-3.9.1-1.5.11-windows-x86_64.jar;C:\Users\ishii\.m2\repository\org\bytedeco\arpack-ng\3.9.1-1.5.11\arpack-ng-3.9.1-1.5.11-macosx-x86_64.jar;C:\Users\ishii\.m2\repository\com\epam\parso\2.0.14\parso-2.0.14.jar;C:\Users\ishii\.m2\repository\org\duckdb\duckdb_jdbc\1.2.0\duckdb_jdbc-1.2.0.jar;C:\Users\ishii\.m2\repository\com\github\haifengl\smile-nlp\4.3.0\smile-nlp-4.3.0.jar;C:\Users\ishii\.m2\repository\org\slf4j\slf4j-simple\2.0.17\slf4j-simple-2.0.17.jar;C:\Users\ishii\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\2.1.20\kotlin-stdlib-2.1.20.jar;C:\Users\ishii\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\kotlinx-coroutines-core\1.8.1\kotlinx-coroutines-core-1.8.1.jar;C:\Users\ishii\.m2\repository\org\jetbrains\kotlinx\kotlinx-coroutines-core-jvm\1.8.1\kotlinx-coroutines-core-jvm-1.8.1.jar com.technosudo.MainKt
+Loading dataset: BCW
+-> Feature rows: 568 | columns: 30
+
+Baseline: Acc=0.9737, Prec=0.9740, Rec=0.9688, F1=0.9713
+
+Running Config 1 → populationSize=50, mutationRate=0.03
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 50/1500
+Iteration 2: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 100/1500
+Iteration 3: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 150/1500
+Iteration 4: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 200/1500
+Iteration 5: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 250/1500
+Iteration 6: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 300/1500
+Iteration 7: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 350/1500
+Iteration 8: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 400/1500
+Iteration 9: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 450/1500
+Iteration 10: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 500/1500
+Iteration 11: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 550/1500
+Iteration 12: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 600/1500
+Iteration 13: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 650/1500
+Iteration 14: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 700/1500
+Iteration 15: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 750/1500
+Iteration 16: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 800/1500
+Iteration 17: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 850/1500
+Iteration 18: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 900/1500
+Iteration 19: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 950/1500
+Iteration 20: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1000/1500
+Iteration 21: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1050/1500
+Iteration 22: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1100/1500
+Iteration 23: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1150/1500
+Iteration 24: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1200/1500
+Iteration 25: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1250/1500
+Iteration 26: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1300/1500
+Iteration 27: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1350/1500
+Iteration 28: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1400/1500
+Iteration 29: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1450/1500
+Iteration 30: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9582
+Iterations run: 30
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 11 selected columns: [0.07871, 1.095, 8.589, 153.4, 0.006399, 0.04904, 184.6, 0.1622, 0.6656, 0.7119, 0.1189]
+→ Config 1 | Acc=0.9825, Prec=0.9810, Rec=0.9810, F1=0.9810
+
+Running Config 2 → populationSize=50, mutationRate=0.05
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 50/1500
+Iteration 2: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 100/1500
+Iteration 3: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 150/1500
+Iteration 4: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 200/1500
+Iteration 5: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 250/1500
+Iteration 6: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 300/1500
+Iteration 7: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 350/1500
+Iteration 8: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 400/1500
+Iteration 9: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 450/1500
+Iteration 10: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 500/1500
+Iteration 11: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 550/1500
+Iteration 12: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 600/1500
+Iteration 13: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 650/1500
+Iteration 14: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 700/1500
+Iteration 15: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 750/1500
+Iteration 16: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 800/1500
+Iteration 17: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 850/1500
+Iteration 18: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 900/1500
+Iteration 19: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 950/1500
+Iteration 20: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1000/1500
+Iteration 21: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1050/1500
+Iteration 22: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1100/1500
+Iteration 23: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1150/1500
+Iteration 24: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1200/1500
+Iteration 25: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1250/1500
+Iteration 26: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1300/1500
+Iteration 27: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1350/1500
+Iteration 28: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1400/1500
+Iteration 29: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1450/1500
+Iteration 30: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9549
+Iterations run: 30
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 12 selected columns: [10.38, 0.2776, 0.2419, 8.589, 0.006399, 0.05373, 0.01587, 17.33, 184.6, 0.1622, 0.7119, 0.1189]
+→ Config 2 | Acc=0.9825, Prec=0.9867, Rec=0.9756, F1=0.9807
+
+Running Config 3 → populationSize=50, mutationRate=0.07
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 50/1500
+Iteration 2: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 100/1500
+Iteration 3: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 150/1500
+Iteration 4: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 200/1500
+Iteration 5: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 250/1500
+Iteration 6: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 300/1500
+Iteration 7: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 350/1500
+Iteration 8: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 400/1500
+Iteration 9: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 450/1500
+Iteration 10: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 500/1500
+Iteration 11: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 550/1500
+Iteration 12: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 600/1500
+Iteration 13: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 650/1500
+Iteration 14: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 700/1500
+Iteration 15: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 750/1500
+Iteration 16: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 800/1500
+Iteration 17: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 850/1500
+Iteration 18: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 900/1500
+Iteration 19: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 950/1500
+Iteration 20: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1000/1500
+Iteration 21: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1050/1500
+Iteration 22: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1100/1500
+Iteration 23: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1150/1500
+Iteration 24: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1200/1500
+Iteration 25: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1250/1500
+Iteration 26: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1300/1500
+Iteration 27: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1350/1500
+Iteration 28: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1400/1500
+Iteration 29: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1450/1500
+Iteration 30: Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9633
+Iterations run: 30
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 12 selected columns: [10.38, 0.1471, 1.095, 0.9053, 0.04904, 0.05373, 0.006193, 25.38, 17.33, 0.1622, 0.2654, 0.1189]
+→ Config 3 | Acc=1.0000, Prec=1.0000, Rec=1.0000, F1=1.0000
+
+Running Config 4 → populationSize=75, mutationRate=0.03
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Fitness = 0.9500, Acc = 1.0000, Features = 15, Evals = 75/1500
+Iteration 2: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 150/1500
+Iteration 3: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 225/1500
+Iteration 4: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 300/1500
+Iteration 5: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 375/1500
+Iteration 6: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 450/1500
+Iteration 7: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 525/1500
+Iteration 8: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 600/1500
+Iteration 9: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 675/1500
+Iteration 10: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 750/1500
+Iteration 11: Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 825/1500
+Iteration 12: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 900/1500
+Iteration 13: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 975/1500
+Iteration 14: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1050/1500
+Iteration 15: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1125/1500
+Iteration 16: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1200/1500
+Iteration 17: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1275/1500
+Iteration 18: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1350/1500
+Iteration 19: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1425/1500
+Iteration 20: Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9667
+Iterations run: 20
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 11 selected columns: [10.38, 122.8, 0.1184, 0.1471, 0.07871, 1.095, 0.04904, 17.33, 2019, 0.4601, 0.1189]
+→ Config 4 | Acc=1.0000, Prec=1.0000, Rec=1.0000, F1=1.0000
+
+Running Config 5 → populationSize=75, mutationRate=0.05
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 75/1500
+Iteration 2: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 150/1500
+Iteration 3: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 225/1500
+Iteration 4: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 300/1500
+Iteration 5: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 375/1500
+Iteration 6: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 450/1500
+Iteration 7: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 525/1500
+Iteration 8: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 600/1500
+Iteration 9: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 675/1500
+Iteration 10: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 750/1500
+Iteration 11: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 825/1500
+Iteration 12: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 900/1500
+Iteration 13: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 975/1500
+Iteration 14: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1050/1500
+Iteration 15: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1125/1500
+Iteration 16: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1200/1500
+Iteration 17: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1275/1500
+Iteration 18: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1350/1500
+Iteration 19: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1425/1500
+Iteration 20: Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9681
+Iterations run: 20
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 8 selected columns: [0.1184, 0.9053, 153.4, 0.04904, 2019, 0.6656, 0.7119, 0.1189]
+→ Config 5 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 6 → populationSize=75, mutationRate=0.07
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 75/1500
+Iteration 2: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 150/1500
+Iteration 3: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 225/1500
+Iteration 4: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 300/1500
+Iteration 5: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 375/1500
+Iteration 6: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 450/1500
+Iteration 7: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 525/1500
+Iteration 8: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 600/1500
+Iteration 9: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 675/1500
+Iteration 10: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 750/1500
+Iteration 11: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 825/1500
+Iteration 12: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 900/1500
+Iteration 13: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 975/1500
+Iteration 14: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1050/1500
+Iteration 15: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1125/1500
+Iteration 16: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1200/1500
+Iteration 17: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1275/1500
+Iteration 18: Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1350/1500
+Iteration 19: Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1425/1500
+Iteration 20: Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9648
+Iterations run: 20
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 9 selected columns: [0.1471, 1.095, 153.4, 0.03003, 0.006193, 17.33, 0.6656, 0.2654, 0.1189]
+→ Config 6 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 7 → populationSize=100, mutationRate=0.03
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 100/1500
+Iteration 2: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 200/1500
+Iteration 3: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 300/1500
+Iteration 4: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 400/1500
+Iteration 5: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 500/1500
+Iteration 6: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 600/1500
+Iteration 7: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 700/1500
+Iteration 8: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 800/1500
+Iteration 9: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 900/1500
+Iteration 10: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1000/1500
+Iteration 11: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1100/1500
+Iteration 12: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1200/1500
+Iteration 13: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1300/1500
+Iteration 14: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1400/1500
+Iteration 15: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9582
+Iterations run: 15
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 11 selected columns: [17.99, 10.38, 0.1471, 0.2419, 0.9053, 153.4, 17.33, 2019, 0.6656, 0.2654, 0.1189]
+→ Config 7 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 8 → populationSize=100, mutationRate=0.05
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 100/1500
+Iteration 2: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 200/1500
+Iteration 3: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 300/1500
+Iteration 4: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 400/1500
+Iteration 5: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 500/1500
+Iteration 6: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 600/1500
+Iteration 7: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 700/1500
+Iteration 8: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 800/1500
+Iteration 9: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 900/1500
+Iteration 10: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1000/1500
+Iteration 11: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1100/1500
+Iteration 12: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1200/1500
+Iteration 13: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1300/1500
+Iteration 14: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1400/1500
+Iteration 15: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9615
+Iterations run: 15
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 10 selected columns: [10.38, 0.1471, 0.07871, 8.589, 153.4, 0.006399, 0.03003, 0.1622, 0.7119, 0.1189]
+→ Config 8 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 9 → populationSize=100, mutationRate=0.07
+Starting GWO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 100/1500
+Iteration 2: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 200/1500
+Iteration 3: Fitness = 0.9516, Acc = 0.9912, Features = 12, Evals = 300/1500
+Iteration 4: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 400/1500
+Iteration 5: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 500/1500
+Iteration 6: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 600/1500
+Iteration 7: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 700/1500
+Iteration 8: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 800/1500
+Iteration 9: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 900/1500
+Iteration 10: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1000/1500
+Iteration 11: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1100/1500
+Iteration 12: Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 1200/1500
+Iteration 13: Fitness = 0.9563, Acc = 0.9825, Features = 8, Evals = 1300/1500
+Iteration 14: Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1400/1500
+Iteration 15: Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 1500/1500
+GWO-Taguchi finished. Best fitness: 0.9615
+Iterations run: 15
+Total solutions evaluated (actual): 1500
+Returning a DataFrame with 10 selected columns: [17.99, 10.38, 0.1184, 0.07871, 0.9053, 0.03003, 17.33, 2019, 0.2654, 0.1189]
+→ Config 9 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+Report saved to: C:\Users\ishii\Documents\Feature-selection-optimizers\taguchi_report_2025-06-26_19-37-24.txt
+
+Optimal configuration: {populationSize=75, mutationRate=0.07}
+CSV exported to: C:\Users\ishii\Documents\Feature-selection-optimizers\taguchi_results_2025-06-26_19-37-24.csv
+Taguchi L9 (2x3) | Experiments: 9 | Avg Features: 9.4 | Avg Reduction: 67.4%
