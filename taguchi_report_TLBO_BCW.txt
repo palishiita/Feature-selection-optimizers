@@ -1,0 +1,217 @@
+TAGUCHI ANALYSIS REPORT
+============================================================
+Generated: 2025-06-26T20:08:32.737864600
+Total Experiments: 9
+
+PARAMETER ANALYSIS (S/N Ratio):
+------------------------------------------------------------
+
+Parameter: populationSize
+Level	S/N Ratio	Mean Fitness	Count
+100	-0.051		0.994		3
+75	-0.077		0.991		3
+50	-0.154		0.982		3
+★ Best: 100 (S/N: -0.051)
+
+Parameter: mutationRate
+Level	S/N Ratio	Mean Fitness	Count
+0.07	-0.077		0.991		3
+0.05	-0.102		0.988		3
+0.03	-0.104		0.988		3
+★ Best: 0.07 (S/N: -0.077)
+
+============================================================
+DETAILED RESULTS:
+Config	Fitness	Accuracy	Precision	Recall	F1	Selected	Reduction%	Improvement	Efficiency	Runtime(ms)
+1	0.9737	0.9737	0.9803	0.9634	0.9709	6/29	79.3	0.0000	0.162281	76521
+2	0.9825	0.9825	0.9867	0.9756	0.9807	8/29	72.4	0.0088	0.122807	98074
+3	0.9912	0.9912	0.9932	0.9878	0.9904	6/29	79.3	0.0175	0.165205	94020
+4	1.0000	1.0000	1.0000	1.0000	1.0000	7/29	75.9	0.0263	0.142857	91068
+5	0.9912	0.9912	0.9932	0.9878	0.9904	10/29	65.5	0.0175	0.099123	90328
+6	0.9825	0.9825	0.9867	0.9756	0.9807	10/29	65.5	0.0088	0.098246	99610
+7	0.9912	0.9912	0.9932	0.9878	0.9904	6/29	79.3	0.0175	0.165205	96760
+8	0.9912	0.9912	0.9932	0.9878	0.9904	6/29	79.3	0.0175	0.165205	99939
+9	1.0000	1.0000	1.0000	1.0000	1.0000	8/29	72.4	0.0263	0.125000	87229
+
+============================================================
+SUMMARY:
+Best Accuracy: 1.0000
+Average Accuracy: 0.9893
+
+
+Loading dataset: BCW
+-> Feature rows: 568 | columns: 30
+
+Baseline: Acc=0.9737, Prec=0.9740, Rec=0.9688, F1=0.9713
+
+Running Config 1 → populationSize=50, mutationRate=0.03
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 150/1500
+Iteration 2: Best Fitness = 0.9767, Acc = 1.0000, Features = 7, Evals = 251/1500
+Iteration 3: Best Fitness = 0.9628, Acc = 0.9825, Features = 6, Evals = 353/1500
+Iteration 4: Best Fitness = 0.9628, Acc = 0.9825, Features = 6, Evals = 454/1500
+Iteration 5: Best Fitness = 0.9628, Acc = 0.9825, Features = 6, Evals = 558/1500
+Iteration 6: Best Fitness = 0.9628, Acc = 0.9825, Features = 6, Evals = 660/1500
+Iteration 7: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 761/1500
+Iteration 8: Best Fitness = 0.9542, Acc = 0.9737, Features = 6, Evals = 862/1500
+Iteration 9: Best Fitness = 0.9628, Acc = 0.9825, Features = 6, Evals = 963/1500
+Iteration 10: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1064/1500
+Iteration 11: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1165/1500
+Iteration 12: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1266/1500
+Iteration 13: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1370/1500
+Iteration 14: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1472/1500
+TLBO-Taguchi finished. Best fitness: 0.9714
+Iterations run: 14
+Total solutions evaluated (actual): 1522
+PRUNE FINAL SOLUTION 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+Returning a DataFrame with 7 selected columns: [10.38, 122.8, 0.2776, 0.05373, 2019, 0.4601, 0.1189]
+→ Config 1 | Acc=0.9737, Prec=0.9803, Rec=0.9634, F1=0.9709
+
+Running Config 2 → populationSize=50, mutationRate=0.05
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 152/1500
+Iteration 2: Best Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 255/1500
+Iteration 3: Best Fitness = 0.9530, Acc = 0.9825, Features = 9, Evals = 356/1500
+Iteration 4: Best Fitness = 0.9563, Acc = 0.9825, Features = 8, Evals = 457/1500
+Iteration 5: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 560/1500
+Iteration 6: Best Fitness = 0.9563, Acc = 0.9825, Features = 8, Evals = 662/1500
+Iteration 7: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 766/1500
+Iteration 8: Best Fitness = 0.9477, Acc = 0.9737, Features = 8, Evals = 866/1500
+Iteration 9: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 970/1500
+Iteration 10: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1073/1500
+Iteration 11: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1176/1500
+Iteration 12: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1278/1500
+Iteration 13: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1382/1500
+Iteration 14: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 1483/1500
+TLBO-Taguchi finished. Best fitness: 0.9648
+Iterations run: 14
+Total solutions evaluated (actual): 1533
+PRUNE FINAL SOLUTION 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0
+Returning a DataFrame with 9 selected columns: [10.38, 0.1184, 0.2776, 0.1471, 8.589, 0.05373, 0.01587, 2019, 0.1189]
+→ Config 2 | Acc=0.9825, Prec=0.9867, Rec=0.9756, F1=0.9807
+
+Running Config 3 → populationSize=50, mutationRate=0.07
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 50).
+Iteration 1: Best Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 155/1500
+Iteration 2: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 259/1500
+Iteration 3: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 362/1500
+Iteration 4: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 464/1500
+Iteration 5: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 567/1500
+Iteration 6: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 673/1500
+Iteration 7: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 778/1500
+Iteration 8: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 880/1500
+Iteration 9: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 985/1500
+Iteration 10: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1090/1500
+Iteration 11: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1193/1500
+Iteration 12: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1296/1500
+Iteration 13: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1399/1500
+TLBO-Taguchi finished. Best fitness: 0.9714
+Iterations run: 13
+Total solutions evaluated (actual): 1501
+PRUNE FINAL SOLUTION 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1
+Returning a DataFrame with 7 selected columns: [0.3001, 1.095, 0.01587, 17.33, 2019, 0.4601, 0.1189]
+→ Config 3 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 4 → populationSize=75, mutationRate=0.03
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Best Fitness = 0.9549, Acc = 0.9912, Features = 11, Evals = 227/1500
+Iteration 2: Best Fitness = 0.9595, Acc = 0.9825, Features = 7, Evals = 378/1500
+Iteration 3: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 533/1500
+Iteration 4: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 685/1500
+Iteration 5: Best Fitness = 0.9510, Acc = 0.9737, Features = 7, Evals = 838/1500
+Iteration 6: Best Fitness = 0.9510, Acc = 0.9737, Features = 7, Evals = 991/1500
+Iteration 7: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1142/1500
+Iteration 8: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1293/1500
+Iteration 9: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 1446/1500
+TLBO-Taguchi finished. Best fitness: 0.9767
+Iterations run: 9
+Total solutions evaluated (actual): 1521
+PRUNE FINAL SOLUTION 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0
+Returning a DataFrame with 8 selected columns: [10.38, 0.1471, 0.9053, 0.05373, 0.01587, 0.03003, 2019, 0.1189]
+→ Config 4 | Acc=1.0000, Prec=1.0000, Rec=1.0000, F1=1.0000
+
+Running Config 5 → populationSize=75, mutationRate=0.05
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 229/1500
+Iteration 2: Best Fitness = 0.9477, Acc = 0.9737, Features = 8, Evals = 385/1500
+Iteration 3: Best Fitness = 0.9477, Acc = 0.9737, Features = 8, Evals = 539/1500
+Iteration 4: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 692/1500
+Iteration 5: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 845/1500
+Iteration 6: Best Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 997/1500
+Iteration 7: Best Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1150/1500
+Iteration 8: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1305/1500
+Iteration 9: Best Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1460/1500
+TLBO-Taguchi finished. Best fitness: 0.9667
+Iterations run: 9
+Total solutions evaluated (actual): 1535
+PRUNE FINAL SOLUTION 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0
+Returning a DataFrame with 11 selected columns: [10.38, 0.2776, 0.1471, 0.2419, 0.07871, 0.9053, 0.05373, 17.33, 2019, 0.7119, 0.1189]
+→ Config 5 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 6 → populationSize=75, mutationRate=0.07
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 75).
+Iteration 1: Best Fitness = 0.9412, Acc = 0.9737, Features = 10, Evals = 232/1500
+Iteration 2: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 388/1500
+Iteration 3: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 543/1500
+Iteration 4: Best Fitness = 0.9497, Acc = 0.9825, Features = 10, Evals = 695/1500
+Iteration 5: Best Fitness = 0.9497, Acc = 0.9825, Features = 10, Evals = 849/1500
+Iteration 6: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1001/1500
+Iteration 7: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1152/1500
+Iteration 8: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 1306/1500
+Iteration 9: Best Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 1462/1500
+TLBO-Taguchi finished. Best fitness: 0.9667
+Iterations run: 9
+Total solutions evaluated (actual): 1537
+PRUNE FINAL SOLUTION 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0
+Returning a DataFrame with 11 selected columns: [17.99, 10.38, 122.8, 0.1184, 0.1471, 1.095, 8.589, 17.33, 2019, 0.1622, 0.1189]
+→ Config 6 | Acc=0.9825, Prec=0.9867, Rec=0.9756, F1=0.9807
+
+Running Config 7 → populationSize=100, mutationRate=0.03
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 302/1500
+Iteration 2: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 506/1500
+Iteration 3: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 713/1500
+Iteration 4: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 915/1500
+Iteration 5: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1119/1500
+Iteration 6: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1326/1500
+TLBO-Taguchi finished. Best fitness: 0.9714
+Iterations run: 6
+Total solutions evaluated (actual): 1526
+PRUNE FINAL SOLUTION 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1
+Returning a DataFrame with 7 selected columns: [10.38, 0.2419, 0.05373, 25.38, 0.7119, 0.4601, 0.1189]
+→ Config 7 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 8 → populationSize=100, mutationRate=0.05
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Best Fitness = 0.9667, Acc = 1.0000, Features = 10, Evals = 306/1500
+Iteration 2: Best Fitness = 0.9582, Acc = 0.9912, Features = 10, Evals = 512/1500
+Iteration 3: Best Fitness = 0.9648, Acc = 0.9912, Features = 8, Evals = 717/1500
+Iteration 4: Best Fitness = 0.9681, Acc = 0.9912, Features = 7, Evals = 920/1500
+Iteration 5: Best Fitness = 0.9595, Acc = 0.9825, Features = 7, Evals = 1126/1500
+Iteration 6: Best Fitness = 0.9714, Acc = 0.9912, Features = 6, Evals = 1330/1500
+TLBO-Taguchi finished. Best fitness: 0.9714
+Iterations run: 6
+Total solutions evaluated (actual): 1530
+PRUNE FINAL SOLUTION 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0
+Returning a DataFrame with 7 selected columns: [10.38, 0.3001, 1.095, 25.38, 17.33, 0.1622, 0.1189]
+→ Config 8 | Acc=0.9912, Prec=0.9932, Rec=0.9878, F1=0.9904
+
+Running Config 9 → populationSize=100, mutationRate=0.07
+Starting TLBO-Taguchi with a budget of 1500 evaluations (Population: 100).
+Iteration 1: Best Fitness = 0.9633, Acc = 1.0000, Features = 11, Evals = 310/1500
+Iteration 2: Best Fitness = 0.9615, Acc = 0.9912, Features = 9, Evals = 516/1500
+Iteration 3: Best Fitness = 0.9733, Acc = 1.0000, Features = 8, Evals = 721/1500
+Iteration 4: Best Fitness = 0.9733, Acc = 1.0000, Features = 8, Evals = 928/1500
+Iteration 5: Best Fitness = 0.9733, Acc = 1.0000, Features = 8, Evals = 1133/1500
+Iteration 6: Best Fitness = 0.9733, Acc = 1.0000, Features = 8, Evals = 1337/1500
+TLBO-Taguchi finished. Best fitness: 0.9733
+Iterations run: 6
+Total solutions evaluated (actual): 1537
+PRUNE FINAL SOLUTION 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0
+Returning a DataFrame with 9 selected columns: [10.38, 122.8, 0.1471, 1.095, 0.006193, 25.38, 17.33, 0.1622, 0.1189]
+→ Config 9 | Acc=1.0000, Prec=1.0000, Rec=1.0000, F1=1.0000
+Report saved to: C:\Users\ishii\Documents\Feature-selection-optimizers\taguchi_report_2025-06-26_20-08-32.txt
+
+Optimal configuration: {populationSize=100, mutationRate=0.07}
+CSV exported to: C:\Users\ishii\Documents\Feature-selection-optimizers\taguchi_results_2025-06-26_20-08-32.csv
+Taguchi L9 (2x3) | Experiments: 9 | Avg Features: 7.4 | Avg Reduction: 74.3%

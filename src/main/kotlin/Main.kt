@@ -2,6 +2,7 @@ package com.technosudo
 
 import com.technosudo.algorithms.fitness.FitnessFunctionImplementation
 import com.technosudo.algorithms.optimizers.GWO
+import com.technosudo.algorithms.optimizers.Optimizer
 import com.technosudo.algorithms.optimizers.TLBO
 import com.technosudo.data.DataLoader
 import com.technosudo.evaluation.wrappers.RandomForestWrapper
@@ -11,10 +12,12 @@ import kotlin.random.Random
 
 fun main() {
     val dataLoaders = mapOf(
-        "BCW" to DataLoader.bcw()
-//        "Arrhythmia" to DataLoader.arrhythmia(),
+//        "BCW" to DataLoader.bcw(),
+        "Arrhythmia" to DataLoader.arrhythmia(),
 //        "Semi-conductor" to DataLoader.semiConductor()
     )
+
+    val optimizerSelected = Optimizer.TLBO
 
     for ((name, loader) in dataLoaders) {
         println("Loading dataset: $name")
@@ -48,23 +51,31 @@ fun main() {
             val fitnessFunction = FitnessFunctionImplementation(dataY.toDataFrame())
             val configurations = taguchi.generateConfigurations()
 
-            val maxIter = 150
-            val maxSolutions = 1500
-
             for (config in configurations) {
                 val popSize = config.parameters["populationSize"] as Int
                 val mutationRate = config.parameters["mutationRate"] as Double
 
                 println("\nRunning Config ${config.experimentId} → populationSize=$popSize, mutationRate=$mutationRate")
 
-                val optimizer = GWO(
-                    name = "GWO-Taguchi",
-                    dataName = name,
-                    populationSize = popSize,
-                    maxIterations = maxIter,
-                    mutationRate = mutationRate,
-                    maxSolutions = maxSolutions
-                )
+                val optimizer = when (optimizerSelected) {
+                    Optimizer.GWO -> GWO(
+                        name = "GWO-Taguchi",
+                        dataName = name,
+                        populationSize = popSize,
+                        maxIterations = 150,
+                        mutationRate = mutationRate,
+                        maxSolutions = 1500
+                    )
+                    Optimizer.TLBO -> TLBO(
+                        name = "TLBO-Taguchi",
+                        dataName = name,
+                        populationSize = popSize,
+                        maxIterations = 150,
+                        mutationRate = mutationRate,
+                        maxSolutions = 1500
+                    )
+                    else -> throw Exception("Unknown optimizer selected")
+                }
 
                 val startTime = System.currentTimeMillis()
                 var selectedData = optimizer.optimize(dataX, fitnessFunction)
