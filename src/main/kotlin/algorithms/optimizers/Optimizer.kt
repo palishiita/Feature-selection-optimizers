@@ -12,4 +12,9 @@ interface Optimizer {
         dataset: DataFrame<*>,
         fitnessFunction: FitnessFunction
     ): DataFrame<*>
+
+    companion object {
+        val GWO = "GWO"
+        val TLBO = "TLBO"
+    }
 }
