@@ -2,11 +2,12 @@ package com.technosudo
 
 import com.technosudo.algorithms.fitness.FitnessFunctionImplementation
 import com.technosudo.algorithms.optimizers.GWO
-import com.technosudo.algorithms.optimizers.TLBO
+//import com.technosudo.algorithms.optimizers.TLBO
 import com.technosudo.data.DataLoader
 import com.technosudo.evaluation.wrappers.RandomForestWrapper
-import org.jetbrains.kotlinx.dataframe.api.columnNames
-import org.jetbrains.kotlinx.dataframe.api.select
+import com.technosudo.taguchi.TaguchiExperiment
+//import org.jetbrains.kotlinx.dataframe.api.columnNames
+//import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import kotlin.random.Random
@@ -17,6 +18,9 @@ fun main() {
 //        "Arrhythmia" to DataLoader.arrhythmia(),
 //        "Semi-conductor" to DataLoader.semiConductor()
     )
+
+    // loading taguchi experiment
+    //val taguchi = TaguchiExperiment()
 
     for ((name, loader) in dataLoaders) {
         println("Loading dataset: $name")

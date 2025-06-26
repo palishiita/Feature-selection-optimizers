@@ -3,8 +3,6 @@ package com.technosudo.data
 import com.technosudo.data.DataProcessor.castToDouble
 import com.technosudo.data.DataProcessor.minMaxNormalize
 import com.technosudo.data.DataProcessor.nameColumns
-import com.technosudo.data.DataProcessor.removeColForNullShare
-import com.technosudo.data.DataProcessor.removeColIfNullPresent
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
